@@ -109,22 +109,21 @@ export default function StartScreen({ updateState }) {
         )}
       </AnimatePresence>
   
-      {/* Restored Background Icons Layer (Drifting) */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, opacity: 0.05 }}>
-        {Array.from({ length: 20 }).map((_, i) => (
-          <motion.div 
-            key={i} 
-            initial={{ x: Math.random() * 100 + '%', y: Math.random() * 100 + '%' }}
-            animate={{ 
-              x: [Math.random() * 100 + '%', Math.random() * 100 + '%'], 
-              y: [Math.random() * 100 + '%', Math.random() * 100 + '%'],
-              opacity: [0.1, 0.4, 0.1],
-              scale: [1, 1.1, 1]
-            }} 
-            transition={{ duration: 20 + i * 2, repeat: Infinity, ease: "linear" }}
-            style={{ position: 'absolute', width: '120px', height: '120px', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundImage: i % 2 === 0 ? 'url(/emblem.jpg)' : 'url(/rat.jpg)', filter: 'grayscale(100%) brightness(1.2)' }} 
-          />
-        ))}
+      {/* Chess-Pattern Background Grid */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, opacity: 0.07, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, 120px)', gridTemplateRows: 'repeat(auto-fill, 120px)', overflow: 'hidden' }}>
+        {Array.from({ length: 80 }).map((_, i) => {
+          const row = Math.floor(i / Math.ceil(window.innerWidth / 120));
+          const col = i % Math.ceil(window.innerWidth / 120);
+          const isEven = (row + col) % 2 === 0;
+          return (
+            <motion.div
+              key={i}
+              animate={{ opacity: [0.4, 0.7, 0.4] }}
+              transition={{ duration: 4 + (i % 5), repeat: Infinity, delay: (i % 7) * 0.3 }}
+              style={{ width: '120px', height: '120px', backgroundSize: '70%', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', backgroundImage: isEven ? 'url(/emblem.jpg)' : 'url(/rat.jpg)', filter: 'grayscale(100%) brightness(1.5)' }}
+            />
+          );
+        })}
       </div>
 
       <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4rem' }}>
