@@ -51,8 +51,8 @@ export default function QuestionScreen({ state, updateState, role }) {
 
   // Helper for Topic logic
   const topicLower = (q.topic || "").toLowerCase().trim();
-  const isNoBlurTopic = topicLower.includes("что по встрече");
-  const isBlurAlwaysTopic = topicLower.includes("угадай мем") || topicLower.includes("куда течет река");
+  const isNoBlurTopic = topicLower.includes("что по встрече") || topicLower.includes("брендомания");
+  const isBlurAlwaysTopic = (topicLower.includes("угадай мем") || topicLower.includes("куда течет река")) && !isNoBlurTopic;
 
   // Side Dashboard (Scoreboard) for Host and Player visibility
   const SideScoreboard = () => (
@@ -64,7 +64,7 @@ export default function QuestionScreen({ state, updateState, role }) {
       boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
     }}>
       <h3 style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--color-teal)', letterSpacing: '1px', marginBottom: '5px' }}>Счёт игры</h3>
-      {state.players.map(p => (
+      {players.map(p => (
         <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontSize: '14px', fontWeight: 'bold' }}>{p.name}</span>
           <span style={{ fontSize: '16px', color: 'var(--color-pink)', fontWeight: '800' }}>{p.score}</span>
@@ -84,7 +84,7 @@ export default function QuestionScreen({ state, updateState, role }) {
         </p>
 
         {role === 'HOST' && (
-          <button className="btn-glass" style={{ marginTop: '40px', padding: '20px 60px', fontSize: '24px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important' }} onClick={() => setModifierMode(true)}>
+          <button className="btn-glass" style={{ marginTop: '40px', padding: '20px 60px', fontSize: '24px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important', borderRadius: 'var(--radius-lg)' }} onClick={() => setModifierMode(true)}>
             Открыть панель модификатора
           </button>
         )}
@@ -103,7 +103,7 @@ export default function QuestionScreen({ state, updateState, role }) {
         <SideScoreboard />
         <h2 style={{ fontSize: '36px', color: 'var(--color-teal)', marginBottom: '40px' }}>Панель модификатора</h2>
         
-         <div style={{ background: 'var(--color-bg-card)', padding: '40px', borderRadius: 'var(--radius-lg)', maxWidth: '700px', margin: '0 auto', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 10px 40px rgba(0,0,0,0.5)' }}>
+         <div style={{ background: 'var(--color-bg-card)', padding: '40px', borderRadius: 'var(--radius-lg)', maxWidth: '750px', margin: '0 auto', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 10px 40px rgba(0,0,0,0.5)' }}>
             <h3 style={{ marginBottom: '15px', fontSize: '18px', color: 'var(--color-teal)' }}>НАЗНАЧИТЬ БАЛЛЫ:</h3>
             <input 
               type="number" 
@@ -117,26 +117,26 @@ export default function QuestionScreen({ state, updateState, role }) {
             />
            
            <h3 style={{ marginBottom: '20px', color: 'var(--color-text-muted)', fontSize: '14px', textTransform: 'uppercase' }}>Управление игроками:</h3>
-           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center', marginBottom: '40px' }}>
-             {state.players.map(p => (
-               <div key={p.id} style={{ display: 'flex', gap: '15px', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '10px 20px', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,255,255,0.05)' }}>
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center', marginBottom: '40px' }}>
+             {players.map(p => (
+               <div key={p.id} style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '15px 25px', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(255,255,255,0.05)' }}>
                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{p.name}</div>
-                    <div style={{ fontSize: '14px', color: 'var(--color-pink)' }}>{p.score} баллов</div>
+                    <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{p.name}</div>
+                    <div style={{ fontSize: '15px', color: 'var(--color-pink)' }}>{p.score} баллов</div>
                  </div>
-                 <div style={{ display: 'flex', gap: '10px' }}>
-                   <button onClick={() => addScore(p.id, false, Number(modifierPoints))} className="btn-glass" style={{ padding: '8px 16px', background: 'rgba(232, 93, 141, 0.1) !important', color: 'var(--color-pink) !important', border: '1px solid var(--color-pink) !important' }}>
-                     - Списать
+                 <div style={{ display: 'flex', gap: '12px' }}>
+                   <button onClick={() => addScore(p.id, false, Number(modifierPoints))} className="btn-glass" style={{ width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, background: 'rgba(232, 93, 141, 0.1) !important', color: 'var(--color-pink) !important', border: '1px solid var(--color-pink) !important', borderRadius: 'var(--radius-md) !important' }}>
+                     -
                    </button>
-                   <button onClick={() => addScore(p.id, true, Number(modifierPoints))} className="btn-glass" style={{ padding: '8px 16px', background: 'rgba(127, 215, 205, 0.1) !important', color: 'var(--color-teal) !important', border: '1px solid var(--color-teal) !important' }}>
-                     + Начислить
+                   <button onClick={() => addScore(p.id, true, Number(modifierPoints))} className="btn-glass" style={{ width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, background: 'rgba(127, 215, 205, 0.1) !important', color: 'var(--color-teal) !important', border: '1px solid var(--color-teal) !important', borderRadius: 'var(--radius-md) !important' }}>
+                     +
                    </button>
                  </div>
                </div>
              ))}
            </div>
            
-           <button className="btn-glass" style={{ width: '100%', padding: '20px', background: 'var(--color-pink) !important', color: 'white !important', fontSize: '20px', fontWeight: '900' }} onClick={closeQuestion}>
+           <button className="btn-glass" style={{ width: '100%', padding: '24px', background: 'var(--color-pink) !important', color: 'white !important', fontSize: '20px', fontWeight: '900', borderRadius: 'var(--radius-md) !important' }} onClick={closeQuestion}>
              ВЫЙТИ В РАУНД
            </button>
         </div>
@@ -193,45 +193,45 @@ export default function QuestionScreen({ state, updateState, role }) {
         <div 
           className="btn-glass" 
           style={{ 
-            padding: '20px', borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0', 
-            display: 'flex', flexWrap: 'nowrap', gap: '15px', alignItems: 'center', 
+            padding: '24px', borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0', 
+            display: 'flex', flexWrap: 'nowrap', gap: '20px', alignItems: 'center', 
             overflowX: 'auto', width: '100%', border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)',
-            minHeight: '120px', boxSizing: 'border-box'
+            minHeight: '140px', boxSizing: 'border-box'
           }}
         >
-          <div style={{ display: 'flex', gap: '10px', flexShrink: 0 }}>
+          <div style={{ display: 'flex', gap: '12px', flexShrink: 0 }}>
             {!showAnswer && (
-              <button className="btn-glass" style={{ padding: '12px 24px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important', fontWeight: 'bold' }} onClick={() => setShowAnswer(true)}>Показать ответ</button>
+              <button className="btn-glass" style={{ padding: '14px 28px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important', fontWeight: 'bold' }} onClick={() => setShowAnswer(true)}>Показать ответ</button>
             )}
             
-            <button className="btn-glass" style={{ padding: '12px 24px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', background: 'var(--color-pink) !important', color: 'white !important', fontWeight: 'bold' }} onClick={closeQuestion}>ВЫЙТИ В РАУНД</button>
+            <button className="btn-glass" style={{ padding: '14px 28px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', background: 'var(--color-pink) !important', color: 'white !important', fontWeight: 'bold' }} onClick={closeQuestion}>ВЫЙТИ В РАУНД</button>
 
             {(isR1Done || isR2Done) && (
-               <button className="btn-glass" style={{ padding: '12px 24px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', background: 'linear-gradient(135deg, var(--color-teal), var(--color-pink)) !important', color: 'white !important', fontWeight: '900' }} onClick={() => updateState({ screen: 'TABLE', currentRound: isR1Done ? 'R2' : 'SUPER', currentQuestion: null })}>СЛЕДУЮЩИЙ РАУНД ⏩</button>
+               <button className="btn-glass" style={{ padding: '14px 28px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', background: 'linear-gradient(135deg, var(--color-teal), var(--color-pink)) !important', color: 'white !important', fontWeight: '900' }} onClick={() => updateState({ screen: 'TABLE', currentRound: isR1Done ? 'R2' : 'SUPER', currentQuestion: null })}>СЛЕДУЮЩИЙ РАУНД ⏩</button>
             )}
 
             {!showAnswer && (
-              <button className="btn-glass" style={{ padding: '12px 24px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', border: '1px solid #ffaa00 !important', color: '#ffaa00 !important' }} onClick={handleSkipQuestion}>ПРОПУСТИТЬ ВОПРОС</button>
+              <button className="btn-glass" style={{ padding: '14px 28px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', border: '1px solid #ffaa00 !important', color: '#ffaa00 !important' }} onClick={handleSkipQuestion}>ПРОПУСТИТЬ ВОПРОС</button>
             )}
           </div>
           
-          <div style={{ width: '1px', height: '40px', background: 'rgba(255,255,255,0.1)', flexShrink: 0 }} />
+          <div style={{ width: '1px', height: '50px', background: 'rgba(255,255,255,0.1)', flexShrink: 0 }} />
           
           <div style={{ display: 'flex', gap: '15px', overflowX: 'auto', padding: '5px' }}>
-            {state.players.map(p => (
-              <div key={p.id} style={{ display: 'flex', gap: '5px', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,255,255,0.05)' }}>
-                <button onClick={() => addScore(p.id, false)} className="btn-glass" style={{ padding: '8px 12px', background: 'rgba(232, 93, 141, 0.1) !important', color: 'var(--color-pink) !important', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-pink) !important', fontSize: '16px' }}>
+            {players.map(p => (
+              <div key={p.id} style={{ display: 'flex', gap: '8px', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '10px 15px', borderRadius: 'var(--radius-md) !important', border: '1px solid rgba(255,255,255,0.05)', minWidth: '160px' }}>
+                <button onClick={() => addScore(p.id, false)} className="btn-glass" style={{ width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, background: 'rgba(232, 93, 141, 0.1) !important', color: 'var(--color-pink) !important', borderRadius: 'var(--radius-md) !important', border: '1px solid var(--color-pink) !important', fontSize: '20px' }}>
                   -
                 </button>
-                <div style={{ padding: '0 10px', fontSize: '14px', minWidth: '60px', textAlign: 'center', fontWeight: 'bold' }}>{p.name}</div>
-                <button onClick={() => addScore(p.id, true)} className="btn-glass" style={{ padding: '8px 12px', background: 'rgba(127, 215, 205, 0.1) !important', color: 'var(--color-teal) !important', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-teal) !important', fontSize: '16px' }}>
+                <div style={{ padding: '0 5px', fontSize: '14px', flex: 1, textAlign: 'center', fontWeight: 'bold' }}>{p.name}</div>
+                <button onClick={() => addScore(p.id, true)} className="btn-glass" style={{ width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, background: 'rgba(127, 215, 205, 0.1) !important', color: 'var(--color-teal) !important', borderRadius: 'var(--radius-md) !important', border: '1px solid var(--color-teal) !important', fontSize: '20px' }}>
                   +
                 </button>
               </div>
             ))}
           </div>
 
-          <button className="btn-glass" style={{ marginLeft: 'auto', padding: '10px 20px', border: '1px solid rgba(255,255,255,0.2) !important', color: 'rgba(255,255,255,0.5) !important', fontSize: '12px', flexShrink: 0 }} onClick={() => updateState({ screen: 'START', currentQuestion: null })}>Прервать игру</button>
+          <button className="btn-glass" style={{ marginLeft: 'auto', padding: '12px 24px', border: '1px solid rgba(255,255,255,0.2) !important', color: 'rgba(255,255,255,0.5) !important', fontSize: '12px', flexShrink: 0, borderRadius: 'var(--radius-md)' }} onClick={() => updateState({ screen: 'START', currentQuestion: null })}>Прервать игру</button>
         </div>
       )}
     </div>

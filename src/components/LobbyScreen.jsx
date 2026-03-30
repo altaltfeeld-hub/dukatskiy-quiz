@@ -85,12 +85,12 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
                   flex: '1', minWidth: '200px', maxWidth: '300px' 
                 }}
               />
-              <button className="btn-glass" type="submit" style={{ padding: '16px 32px', fontSize: '18px', background: 'var(--color-teal)', color: 'var(--color-bg-deep)', borderRadius: 'var(--radius-md)', border: 'none' }}>
+              <button className="btn-glass" type="submit" style={{ padding: '16px 32px', fontSize: '18px', background: 'var(--color-teal)', color: 'var(--color-bg-deep)', borderRadius: 'var(--radius-md) !important', border: 'none' }}>
                 Добавить
               </button>
             </form>
 
-            <button className="btn-glass" onClick={handleStartGame} style={{ padding: '24px 48px', fontSize: '24px', background: 'var(--color-pink) !important', color: 'white !important', borderRadius: 'var(--radius-md)', alignSelf: 'center' }}>
+            <button className="btn-glass" onClick={handleStartGame} style={{ padding: '24px 48px', fontSize: '24px', background: 'var(--color-pink) !important', color: 'white !important', borderRadius: 'var(--radius-lg) !important', alignSelf: 'center', fontWeight: '900' }}>
               НАЧАТЬ КВИЗ ВСЕМ
             </button>
           </div>

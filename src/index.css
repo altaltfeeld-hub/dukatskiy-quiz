@@ -95,6 +95,7 @@ body {
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: var(--radius-md) !important;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
   color: var(--color-text-main) !important;
   position: relative;

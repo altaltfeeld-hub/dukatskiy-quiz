@@ -72,8 +72,8 @@ export default function SuperGame({ state, updateState, role }) {
           
           {(() => {
             const topicLower = (finalQ.topic || "").toLowerCase().trim();
-            const isNoBlurTopic = topicLower.includes("что по встрече");
-            const isBlurAlwaysTopic = topicLower.includes("угадай мем") || topicLower.includes("куда течет река");
+            const isNoBlurTopic = topicLower.includes("что по встрече") || topicLower.includes("брендомания");
+            const isBlurAlwaysTopic = (topicLower.includes("угадай мем") || topicLower.includes("куда течет река")) && !isNoBlurTopic;
             const imageFile = finalQ.image || finalQ.answerImage;
 
             if (!imageFile) {
@@ -122,20 +122,20 @@ export default function SuperGame({ state, updateState, role }) {
                   style={{ 
                     width: '140px', padding: '12px', fontSize: '24px', 
                     background: 'rgba(0,0,0,0.4)', color: 'white', 
-                    border: '2px solid var(--color-teal)', borderRadius: 'var(--radius-sm)', 
+                    border: '2px solid var(--color-teal)', borderRadius: 'var(--radius-md)', 
                     textAlign: 'center', outline: 'none', boxSizing: 'border-box'
                   }}
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '30px' }}>
-                {state.players.map(p => (
-                  <div key={p.id} style={{ display: 'flex', gap: '5px', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,255,255,0.05)' }}>
-                    <button onClick={() => addScore(p.id, -rewardAmount)} className="btn-glass" style={{ padding: '10px 16px', background: 'rgba(232, 93, 141, 0.1) !important', border: '1px solid var(--color-pink) !important', color: 'var(--color-pink) !important', borderRadius: 'var(--radius-sm)', fontSize: '18px' }}>
+              <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '40px' }}>
+                {players.map(p => (
+                  <div key={p.id} style={{ display: 'flex', gap: '10px', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '15px 25px', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(255,255,255,0.05)', minWidth: '180px' }}>
+                    <button onClick={() => addScore(p.id, -rewardAmount)} className="btn-glass" style={{ width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(232, 93, 141, 0.1) !important', border: '1px solid var(--color-pink) !important', color: 'var(--color-pink) !important', borderRadius: 'var(--radius-md)', fontSize: '20px', padding: 0 }}>
                       -
                     </button>
-                    <div style={{ padding: '0 15px', fontSize: '16px', minWidth: '80px', textAlign: 'center', fontWeight: 'bold' }}>{p.name}</div>
-                    <button onClick={() => addScore(p.id, rewardAmount)} className="btn-glass" style={{ padding: '10px 16px', background: 'rgba(127, 215, 205, 0.1) !important', border: '1px solid var(--color-teal) !important', color: 'var(--color-teal) !important', borderRadius: 'var(--radius-sm)', fontSize: '18px' }}>
+                    <div style={{ padding: '0 10px', fontSize: '18px', flex: 1, textAlign: 'center', fontWeight: 'bold' }}>{p.name}</div>
+                    <button onClick={() => addScore(p.id, rewardAmount)} className="btn-glass" style={{ width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(127, 215, 205, 0.1) !important', border: '1px solid var(--color-teal) !important', color: 'var(--color-teal) !important', borderRadius: 'var(--radius-md)', fontSize: '20px', padding: 0 }}>
                       +
                     </button>
                   </div>
@@ -146,7 +146,7 @@ export default function SuperGame({ state, updateState, role }) {
 
               <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
                 {!showAnswer && (
-                  <button className="btn-glass" style={{ padding: '16px 40px', fontSize: '24px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important' }} onClick={() => setShowAnswer(true)}>
+                  <button className="btn-glass" style={{ padding: '16px 40px', fontSize: '24px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important', borderRadius: 'var(--radius-md)' }} onClick={() => setShowAnswer(true)}>
                     Проверить ответ
                   </button>
                 )}
@@ -222,7 +222,7 @@ function FragmentList({ remaining, onRemove, role }) {
         <div key={t.topic} className="btn-glass" style={{ padding: '24px 30px', borderRadius: 'var(--radius-lg)', minWidth: '300px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flex: '1 1 300px' }}>
           <span style={{ fontSize: '1.5rem', fontWeight: '800' }}>{t.topic}</span>
           {role === 'HOST' && (
-            <button className="btn-glass" style={{ background: 'rgba(255,50,50,0.1) !important', color: '#ff8888 !important', padding: '10px 20px', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,50,50,0.2) !important' }} onClick={() => onRemove(t.topic)}>
+            <button className="btn-glass" style={{ background: 'rgba(255,50,50,0.1) !important', color: '#ff8888 !important', padding: '10px 20px', borderRadius: 'var(--radius-md) !important', border: '1px solid rgba(255,50,50,0.2) !important' }} onClick={() => onRemove(t.topic)}>
               Убрать
             </button>
           )}
