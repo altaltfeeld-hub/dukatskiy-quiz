@@ -9,7 +9,7 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
   
   const handleHostAddPlayer = (e) => {
     e.preventDefault();
-    if (!inviteName.trim()) return;
+    if (!inviteName.trim() || players.length >= 5) return;
     const newPlayer = { id: Date.now().toString(), name: inviteName.trim(), score: 0, connected: false };
     updateState({ players: [...players, newPlayer] });
     setInviteName('');
@@ -32,6 +32,12 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
     updateState({ screen: 'ROUND_SELECT' });
   };
 
+  const handleDeletePlayer = (playerId) => {
+    updateState({ players: players.filter(p => p.id !== playerId) });
+  };
+
+  const isLimitReached = players.length >= 5;
+
   return (
     <div className="container" style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', overflow: 'hidden' }}>
       
@@ -49,15 +55,33 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
           <div style={{ textAlign: 'center', width: '100%', maxWidth: '700px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div>
               <h2 style={{ color: 'var(--color-pink)', fontSize: '20px', fontWeight: '900', marginBottom: '5px' }}>Вы Ведущий 👑</h2>
-              <p style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>Впишите игроков. Они увидят приглашение!</p>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>
+                {isLimitReached ? <span style={{ color: 'var(--color-pink)', fontWeight: 'bold' }}>ЛИМИТ ИГРОКОВ (5) ДОСТИГНУТ</span> : "Впишите игроков. Они увидят приглашение!"}
+              </p>
             </div>
             
-            <form onSubmit={handleHostAddPlayer} style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-              <input type="text" value={inviteName} onChange={(e) => setInviteName(e.target.value)} placeholder="Имя игрока" style={{ padding: '12px 20px', fontSize: '16px', background: 'rgba(0,0,0,0.4)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-md)', outline: 'none', width: '220px' }} />
-              <button className="btn-glass" type="submit" style={{ padding: '12px 24px', fontSize: '14px', background: 'var(--color-teal)', fontWeight: '900' }}>Добавить</button>
+            <form onSubmit={handleHostAddPlayer} style={{ display: 'flex', gap: '10px', justifyContent: 'center', opacity: isLimitReached ? 0.5 : 1 }}>
+              <input 
+                type="text" 
+                value={inviteName} 
+                onChange={(e) => setInviteName(e.target.value)} 
+                placeholder={isLimitReached ? "Лимит достигнут" : "Имя игрока"} 
+                disabled={isLimitReached}
+                style={{ padding: '12px 20px', fontSize: '16px', background: 'rgba(0,0,0,0.4)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-md)', outline: 'none', width: '220px' }} 
+              />
+              <button 
+                className="btn-glass" 
+                type="submit" 
+                disabled={isLimitReached}
+                style={{ padding: '12px 24px', fontSize: '14px', background: isLimitReached ? 'rgba(255,255,255,0.05)' : 'var(--color-teal)', fontWeight: '900', cursor: isLimitReached ? 'not-allowed' : 'pointer' }}
+              >
+                Добавить
+              </button>
             </form>
 
-            <button className="btn-glass" onClick={handleStartGame} style={{ padding: '20px 50px', fontSize: '22px', background: 'var(--color-pink) !important', color: 'white !important', borderRadius: 'var(--radius-lg) !important', alignSelf: 'center', fontWeight: '900', boxShadow: '0 0 30px rgba(232, 93, 141, 0.2)' }}>НАЧАТЬ КВИЗ ВСЕМ</button>
+            <button className="btn-glass" onClick={handleStartGame} style={{ padding: '20px 50px', fontSize: '22px', background: 'var(--color-pink) !important', color: 'white !important', borderRadius: 'var(--radius-lg) !important', alignSelf: 'center', fontWeight: '900', boxShadow: '0 0 30px rgba(232, 93, 141, 0.2)' }}>
+              НАЧАТЬ КВИЗ ВСЕМ
+            </button>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '700px' }}>
@@ -93,7 +117,17 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
           <h3 style={{ textAlign: 'center', marginBottom: '1rem', color: 'var(--color-text-muted)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '2px' }}>Игроки в лобби ({players.length})</h3>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
             {players.map((p, i) => (
-              <div key={i} className="btn-glass" style={{ padding: '10px 20px', borderRadius: '40px !important', fontSize: '14px', background: p.connected ? 'rgba(127, 215, 205, 0.1) !important' : 'rgba(255,255,255,0.02) !important', color: p.connected ? 'var(--color-teal)' : 'var(--color-text-muted)', fontWeight: '800' }}>{p.name} {p.connected ? '🟢' : '⏳'}</div>
+              <div key={p.id} className="btn-glass" style={{ padding: '10px 20px', borderRadius: '40px !important', fontSize: '14px', background: p.connected ? 'rgba(127, 215, 205, 0.1) !important' : 'rgba(255,255,255,0.02) !important', color: p.connected ? 'var(--color-teal)' : 'var(--color-text-muted)', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>{p.name} {p.connected ? '🟢' : '⏳'}</span>
+                {role === 'HOST' && (
+                  <button 
+                    onClick={() => handleDeletePlayer(p.id)} 
+                    style={{ color: 'var(--color-pink)', cursor: 'pointer', fontSize: '18px', border: 'none', background: 'none', padding: '0 4px', lineHeight: 1 }}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
             ))}
           </div>
         </div>
