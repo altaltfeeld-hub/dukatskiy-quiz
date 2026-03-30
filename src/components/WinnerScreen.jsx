@@ -123,7 +123,15 @@ export default function WinnerScreen({ state, updateState }) {
           className="btn-glass"
           style={{ padding: '24px 80px', fontSize: '18px', background: 'var(--color-pink) !important', color: 'white !important', borderRadius: 'var(--radius-lg)', alignSelf: 'center', marginTop: '40px', border: 'none !important' }}
           onClick={() => {
-             updateState({ screen: 'START', players: [], host: '', currentRound: 0, currentQuestion: null, removedSuperTopics: [], openedQuestions: [] });
+             updateState({ 
+               screen: 'START', 
+               players: [], 
+               host: '', 
+               currentRound: null, 
+               currentQuestion: null, 
+               removedSuperTopics: [], 
+               openedQuestions: [] 
+             });
           }}>
           НОВАЯ ИГРА
         </button>

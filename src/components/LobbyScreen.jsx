@@ -4,6 +4,9 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
   const [inviteName, setInviteName] = useState('');
   const [hasClaimedSpot, setHasClaimedSpot] = useState(false);
 
+  const players = state.players || [];
+  const hostStatus = state.host || '';
+
   // Host adds a pending participant
   const handleHostAddPlayer = (e) => {
     e.preventDefault();
@@ -11,7 +14,7 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
     
     const newPlayer = { id: Date.now().toString(), name: inviteName.trim(), score: 0, connected: false };
     updateState({
-      players: [...state.players, newPlayer]
+      players: [...players, newPlayer]
     });
     setInviteName('');
   };
@@ -22,7 +25,7 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
     setRole('PLAYER');
     
     // Mark as connected
-    const updatedPlayers = state.players.map(p => 
+    const updatedPlayers = players.map(p => 
       p.id === playerId ? { ...p, connected: true } : p
     );
     updateState({ players: updatedPlayers });
@@ -34,7 +37,7 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
   };
 
   const handleStartGame = () => {
-    if (state.players.length === 0) {
+    if (players.length === 0) {
       alert('Нет добавленных игроков!');
       return;
     }
@@ -132,10 +135,10 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
         {/* Global Roster */}
         <div style={{ width: '100%', maxWidth: '800px', marginTop: '2rem' }}>
           <h3 style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--color-text-muted)' }}>
-            Игроки в лобби ({state.players.length})
+            Игроки в лобби ({players.length})
           </h3>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center' }}>
-            {state.players.map((p, i) => (
+            {players.map((p, i) => (
               <div key={i} className="btn-glass" style={{ 
                 padding: '12px 20px', borderRadius: 'var(--radius-lg)', fontSize: '16px', 
                 background: p.connected ? 'rgba(127, 215, 205, 0.1) !important' : 'rgba(255,255,255,0.02) !important',
@@ -146,7 +149,7 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
                 {p.name} {p.connected ? '🟢' : '⏳'}
               </div>
             ))}
-            {state.players.length === 0 && <span style={{ color: 'var(--color-text-muted)' }}>Ожидание игроков...</span>}
+            {players.length === 0 && <span style={{ color: 'var(--color-text-muted)' }}>Ожидание игроков...</span>}
           </div>
         </div>
       </div>

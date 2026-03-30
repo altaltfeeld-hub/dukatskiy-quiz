@@ -2,10 +2,12 @@ import React from 'react';
 import { R1_DATA, R2_DATA } from '../data';
 
 export default function GameTable({ state, updateState, role }) {
-  const roundData = state.currentRound === 'R1' ? R1_DATA : R2_DATA;
+  const roundData = (state.currentRound === 'R1' ? R1_DATA : R2_DATA) || R1_DATA[0].questions;
+  const players = state.players || [];
+  const openedQuestions = state.openedQuestions || [];
 
-  const openedR1 = state.openedQuestions.filter(q => q.startsWith('R1_')).length;
-  const openedR2 = state.openedQuestions.filter(q => q.startsWith('R2_')).length;
+  const openedR1 = openedQuestions.filter(q => q.startsWith('R1_')).length;
+  const openedR2 = openedQuestions.filter(q => q.startsWith('R2_')).length;
   const isR1Done = state.currentRound === 'R1' && openedR1 >= 15;
   const isR2Done = state.currentRound === 'R2' && openedR2 >= 25;
 
@@ -13,12 +15,12 @@ export default function GameTable({ state, updateState, role }) {
     if (role !== 'HOST') return; // Only host can click
 
     const qId = `${state.currentRound}_${topicIdx}_${questionIdx}`;
-    if (state.openedQuestions.includes(qId)) return; // Already clicked
+    if (openedQuestions.includes(qId)) return; // Already clicked
 
     updateState({
       screen: 'QUESTION',
-      currentQuestion: { ...questionData, id: qId, topic: roundData[topicIdx].topic },
-      openedQuestions: [...state.openedQuestions, qId]
+      currentQuestion: { ...questionData, id: qId, topic: roundData[topicIdx]?.topic },
+      openedQuestions: [...openedQuestions, qId]
     });
   };
 

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { SUPER_GAME_DATA } from '../data';
 
 export default function SuperGame({ state, updateState, role }) {
+  const players = state.players || [];
   const removedTopics = state.removedSuperTopics || [];
   const remaining = SUPER_GAME_DATA.filter(t => !removedTopics.includes(t.topic));
 

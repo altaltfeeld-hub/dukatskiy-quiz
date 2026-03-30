@@ -1,8 +1,11 @@
 import React from 'react';
 
 export default function RoundSelect({ state, updateState }) {
-  const openedR1 = state.openedQuestions.filter(q => q.startsWith('R1_')).length;
-  const openedR2 = state.openedQuestions.filter(q => q.startsWith('R2_')).length;
+  const players = state.players || [];
+  const openedQuestions = state.openedQuestions || [];
+  
+  const openedR1 = openedQuestions.filter(q => q.startsWith('R1_')).length;
+  const openedR2 = openedQuestions.filter(q => q.startsWith('R2_')).length;
   
   const totalR1 = 15;
   const totalR2 = 25;
@@ -32,7 +35,7 @@ export default function RoundSelect({ state, updateState }) {
       <div className="stacked-content" style={{ alignItems: 'center', width: '100%' }}>
         {/* Scoreboard */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap', width: '100%' }}>
-          {state.players.map(p => (
+          {players.map(p => (
             <div key={p.id} className="btn-glass" style={{
               padding: '12px 20px', borderRadius: 'var(--radius-md)', 
               minWidth: '120px', textAlign: 'center', pointerEvents: 'none',

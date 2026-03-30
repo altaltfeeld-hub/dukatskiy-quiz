@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
 export default function QuestionScreen({ state, updateState, role }) {
-  const q = state.currentQuestion;
+  const q = state.currentQuestion || {};
   const isModifier = q.modifier;
+  const players = state.players || [];
+  const openedQuestions = state.openedQuestions || [];
+
+  const openedR1Count = openedQuestions.filter(qid => qid.startsWith('R1_')).length;
+  const openedR2Count = openedQuestions.filter(qid => qid.startsWith('R2_')).length;
+  const isR1Done = state.currentRound === 'R1' && openedR1Count >= 15;
+  const isR2Done = state.currentRound === 'R2' && openedR2Count >= 25;
   
   const [timeLeft, setTimeLeft] = useState(60);
   const [showAnswer, setShowAnswer] = useState(false);
@@ -20,7 +27,7 @@ export default function QuestionScreen({ state, updateState, role }) {
   }, [timeLeft, isModifier]);
 
   const addScore = (playerId, correct, pointsToChange = q.cost) => {
-    const updatedPlayers = state.players.map(p => {
+    const updatedPlayers = players.map(p => {
       if (p.id === playerId) {
         return { ...p, score: p.score + (correct ? pointsToChange : -pointsToChange) };
       }
