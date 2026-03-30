@@ -112,15 +112,15 @@ export default function SuperGame({ state, updateState, role }) {
           )}
 
           {role === 'HOST' && (
-            <div className="btn-glass" style={{ marginTop: '40px', padding: '30px', width: '100%', borderRadius: 'var(--radius-lg)' }}>
-              <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' }}>
-                <span style={{ fontSize: '18px' }}>Ставка за верный ответ:</span>
+            <div className="btn-glass" style={{ marginTop: '40px', padding: '30px', width: '100%', borderRadius: 'var(--radius-lg) !important', background: 'rgba(255,255,255,0.02) !important' }}>
+              <div style={{ marginBottom: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' }}>
+                <span style={{ fontSize: '18px', fontWeight: 'bold' }}>Ставка за верный ответ:</span>
                 <input 
                   type="number" 
                   value={rewardAmount} 
                   onChange={e => setRewardAmount(e.target.value)}
                   style={{ 
-                    width: '140px', padding: '12px', fontSize: '24px', 
+                    width: '160px', padding: '15px', fontSize: '28px', 
                     background: 'rgba(0,0,0,0.4)', color: 'white', 
                     border: '2px solid var(--color-teal)', borderRadius: 'var(--radius-md)', 
                     textAlign: 'center', outline: 'none', boxSizing: 'border-box'
@@ -128,30 +128,72 @@ export default function SuperGame({ state, updateState, role }) {
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '40px' }}>
+              {/* Player Scoring Cards */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center', marginBottom: '40px' }}>
                 {players.map(p => (
-                  <div key={p.id} style={{ display: 'flex', gap: '10px', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '15px 25px', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(255,255,255,0.05)', minWidth: '180px' }}>
-                    <button onClick={() => addScore(p.id, -rewardAmount)} className="btn-glass" style={{ width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(232, 93, 141, 0.1) !important', border: '1px solid var(--color-pink) !important', color: 'var(--color-pink) !important', borderRadius: 'var(--radius-md)', fontSize: '20px', padding: 0 }}>
-                      -
-                    </button>
-                    <div style={{ padding: '0 10px', fontSize: '18px', flex: 1, textAlign: 'center', fontWeight: 'bold' }}>{p.name}</div>
-                    <button onClick={() => addScore(p.id, rewardAmount)} className="btn-glass" style={{ width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(127, 215, 205, 0.1) !important', border: '1px solid var(--color-teal) !important', color: 'var(--color-teal) !important', borderRadius: 'var(--radius-md)', fontSize: '20px', padding: 0 }}>
-                      +
-                    </button>
+                  <div 
+                    key={p.id} 
+                    className="btn-glass"
+                    style={{ 
+                      display: 'flex', gap: '20px', alignItems: 'center', 
+                      padding: '15px 25px', borderRadius: 'var(--radius-lg) !important',
+                      background: 'rgba(255,255,255,0.03) !important', border: '1px solid rgba(255,255,255,0.08) !important',
+                      minWidth: '220px', flexShrink: 0
+                    }}
+                  >
+                    <div style={{ flex: 1, textAlign: 'left' }}>
+                      <div style={{ fontSize: '18px', fontWeight: '900', color: 'white' }}>{p.name}</div>
+                      <div style={{ fontSize: '14px', color: 'var(--color-pink)', fontWeight: 'bold' }}>{p.score} баллов</div>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <button 
+                        onClick={() => addScore(p.id, -rewardAmount)} 
+                        className="btn-glass" 
+                        style={{ 
+                          width: '52px', height: '52px', padding: 0, 
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          background: 'rgba(232, 93, 141, 0.1) !important', color: 'var(--color-pink) !important', 
+                          borderRadius: '50% !important', border: '2px solid var(--color-pink) !important', fontSize: '24px' 
+                        }}
+                      >
+                        -
+                      </button>
+                      <button 
+                        onClick={() => addScore(p.id, rewardAmount)} 
+                        className="btn-glass" 
+                        style={{ 
+                          width: '52px', height: '52px', padding: 0, 
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          background: 'rgba(127, 215, 205, 0.1) !important', color: 'var(--color-teal) !important', 
+                          borderRadius: '50% !important', border: '2px solid var(--color-teal) !important', fontSize: '24px' 
+                        }}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
 
-              <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '20px 0' }} />
+              <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '30px 0' }} />
 
               <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
                 {!showAnswer && (
-                  <button className="btn-glass" style={{ padding: '16px 40px', fontSize: '24px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important', borderRadius: 'var(--radius-md)' }} onClick={() => setShowAnswer(true)}>
+                  <button 
+                    className="btn-glass" 
+                    style={{ padding: '16px 48px', fontSize: '24px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important', borderRadius: 'var(--radius-md) !important', fontWeight: '900' }} 
+                    onClick={() => setShowAnswer(true)}
+                  >
                     Проверить ответ
                   </button>
                 )}
                 {showAnswer && (
-                   <button className="btn-glass" style={{ padding: '16px 40px', fontSize: '24px', background: 'var(--color-pink) !important', color: 'white !important', fontWeight: 'bold' }} onClick={() => updateState({ screen: 'WINNER_SCREEN' })}>
+                   <button 
+                    className="btn-glass" 
+                    style={{ padding: '16px 48px', fontSize: '24px', background: 'var(--color-pink) !important', color: 'white !important', fontWeight: '900', borderRadius: 'var(--radius-md) !important' }} 
+                    onClick={() => updateState({ screen: 'WINNER_SCREEN' })}
+                  >
                      🏆 К ПОБЕДИТЕЛЮ
                    </button>
                 )}

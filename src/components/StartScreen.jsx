@@ -17,7 +17,7 @@ export default function StartScreen({ updateState }) {
         <button 
           className="btn-glass"
           onClick={() => setShowRules(true)}
-          style={{ width: '50px', height: '50px', borderRadius: '50%', fontSize: '24px' }}
+          style={{ width: '50px', height: '50px', borderRadius: '50% !important', fontSize: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
           ?
         </button>
@@ -123,9 +123,10 @@ export default function StartScreen({ updateState }) {
           style={{ 
             padding: '24px 64px', fontSize: 'clamp(20px, 4vw, 32px)', 
             background: 'var(--color-pink) !important', color: '#fff !important', 
-            borderRadius: 'var(--radius-lg)', fontWeight: '800', 
+            borderRadius: 'var(--radius-lg) !important', fontWeight: '900', 
             boxShadow: '0 0 50px rgba(232, 93, 141, 0.3)',
-            animation: 'pulseStart 2s infinite' 
+            animation: 'pulseStart 2s infinite',
+            border: 'none !important'
           }}
           onClick={() => updateState({ screen: 'LOBBY' })}
         >

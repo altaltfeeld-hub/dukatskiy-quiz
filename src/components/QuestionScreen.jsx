@@ -190,48 +190,111 @@ export default function QuestionScreen({ state, updateState, role }) {
       )}
 
       {role === 'HOST' && (
-        <div 
-          className="btn-glass" 
-          style={{ 
-            padding: '24px', borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0', 
-            display: 'flex', flexWrap: 'nowrap', gap: '20px', alignItems: 'center', 
-            overflowX: 'auto', width: '100%', border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)',
-            minHeight: '140px', boxSizing: 'border-box'
-          }}
-        >
-          <div style={{ display: 'flex', gap: '12px', flexShrink: 0 }}>
+        <div style={{ 
+          marginTop: 'auto', padding: '30px', 
+          background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(20px)',
+          borderTop: '1px solid rgba(255,255,255,0.1)', width: '100%',
+          display: 'flex', flexDirection: 'column', gap: '25px',
+          zIndex: 10
+        }}>
+          {/* Main Controls Row */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center', alignItems: 'center' }}>
             {!showAnswer && (
-              <button className="btn-glass" style={{ padding: '14px 28px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important', fontWeight: 'bold' }} onClick={() => setShowAnswer(true)}>Показать ответ</button>
+              <button 
+                className="btn-glass" 
+                style={{ padding: '16px 32px', fontSize: '18px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important', fontWeight: '900', borderRadius: 'var(--radius-md) !important' }} 
+                onClick={() => setShowAnswer(true)}
+              >
+                ОТКРЫТЬ ОТВЕТ
+              </button>
             )}
             
-            <button className="btn-glass" style={{ padding: '14px 28px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', background: 'var(--color-pink) !important', color: 'white !important', fontWeight: 'bold' }} onClick={closeQuestion}>ВЫЙТИ В РАУНД</button>
+            <button 
+              className="btn-glass" 
+              style={{ padding: '16px 32px', fontSize: '18px', background: 'var(--color-pink) !important', color: 'white !important', fontWeight: '900', borderRadius: 'var(--radius-md) !important' }} 
+              onClick={closeQuestion}
+            >
+              ВЫЙТИ В РАУНД
+            </button>
 
             {(isR1Done || isR2Done) && (
-               <button className="btn-glass" style={{ padding: '14px 28px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', background: 'linear-gradient(135deg, var(--color-teal), var(--color-pink)) !important', color: 'white !important', fontWeight: '900' }} onClick={() => updateState({ screen: 'TABLE', currentRound: isR1Done ? 'R2' : 'SUPER', currentQuestion: null })}>СЛЕДУЮЩИЙ РАУНД ⏩</button>
+               <button 
+                className="btn-glass" 
+                style={{ padding: '16px 32px', fontSize: '18px', background: 'linear-gradient(135deg, var(--color-teal), var(--color-pink)) !important', color: 'white !important', fontWeight: '900', borderRadius: 'var(--radius-md) !important' }} 
+                onClick={() => updateState({ screen: 'TABLE', currentRound: isR1Done ? 'R2' : 'SUPER', currentQuestion: null })}
+              >
+                СЛЕДУЮЩИЙ РАУНД ⏩
+              </button>
             )}
 
             {!showAnswer && (
-              <button className="btn-glass" style={{ padding: '14px 28px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', border: '1px solid #ffaa00 !important', color: '#ffaa00 !important' }} onClick={handleSkipQuestion}>ПРОПУСТИТЬ ВОПРОС</button>
+              <button 
+                className="btn-glass" 
+                style={{ padding: '16px 32px', fontSize: '18px', border: '2px solid #ffaa00 !important', color: '#ffaa00 !important', borderRadius: 'var(--radius-md) !important' }} 
+                onClick={handleSkipQuestion}
+              >
+                ПРОПУСТИТЬ
+              </button>
             )}
+
+            <button 
+              className="btn-glass" 
+              style={{ padding: '12px 24px', border: '1px solid rgba(255,255,255,0.2) !important', color: 'rgba(255,255,255,0.5) !important', fontSize: '12px', borderRadius: 'var(--radius-sm) !important' }} 
+              onClick={() => updateState({ screen: 'START', currentQuestion: null })}
+            >
+              Прервать игру
+            </button>
           </div>
-          
-          <div style={{ width: '1px', height: '50px', background: 'rgba(255,255,255,0.1)', flexShrink: 0 }} />
-          
-          <div style={{ display: 'flex', gap: '15px', overflowX: 'auto', padding: '5px' }}>
+
+          <div style={{ width: '100%', height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+
+          {/* Player Scoring Cards */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
             {players.map(p => (
-              <div key={p.id} style={{ display: 'flex', gap: '8px', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '10px 15px', borderRadius: 'var(--radius-md) !important', border: '1px solid rgba(255,255,255,0.05)', minWidth: '160px' }}>
-                <button onClick={() => addScore(p.id, false)} className="btn-glass" style={{ width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, background: 'rgba(232, 93, 141, 0.1) !important', color: 'var(--color-pink) !important', borderRadius: 'var(--radius-md) !important', border: '1px solid var(--color-pink) !important', fontSize: '20px' }}>
-                  -
-                </button>
-                <div style={{ padding: '0 5px', fontSize: '14px', flex: 1, textAlign: 'center', fontWeight: 'bold' }}>{p.name}</div>
-                <button onClick={() => addScore(p.id, true)} className="btn-glass" style={{ width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, background: 'rgba(127, 215, 205, 0.1) !important', color: 'var(--color-teal) !important', borderRadius: 'var(--radius-md) !important', border: '1px solid var(--color-teal) !important', fontSize: '20px' }}>
-                  +
-                </button>
+              <div 
+                key={p.id} 
+                className="btn-glass"
+                style={{ 
+                  display: 'flex', gap: '20px', alignItems: 'center', 
+                  padding: '15px 25px', borderRadius: 'var(--radius-lg) !important',
+                  background: 'rgba(255,255,255,0.03) !important', border: '1px solid rgba(255,255,255,0.08) !important',
+                  minWidth: '220px'
+                }}
+              >
+                <div style={{ flex: 1, textAlign: 'left' }}>
+                  <div style={{ fontSize: '18px', fontWeight: '900', color: 'white' }}>{p.name}</div>
+                  <div style={{ fontSize: '14px', color: 'var(--color-pink)', fontWeight: 'bold' }}>{p.score} баллов</div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button 
+                    onClick={() => addScore(p.id, false)} 
+                    className="btn-glass" 
+                    style={{ 
+                      width: '52px', height: '52px', padding: 0, 
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'rgba(232, 93, 141, 0.1) !important', color: 'var(--color-pink) !important', 
+                      borderRadius: '50% !important', border: '2px solid var(--color-pink) !important', fontSize: '24px' 
+                    }}
+                  >
+                    -
+                  </button>
+                  <button 
+                    onClick={() => addScore(p.id, true)} 
+                    className="btn-glass" 
+                    style={{ 
+                      width: '52px', height: '52px', padding: 0, 
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'rgba(127, 215, 205, 0.1) !important', color: 'var(--color-teal) !important', 
+                      borderRadius: '50% !important', border: '2px solid var(--color-teal) !important', fontSize: '24px' 
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
             ))}
           </div>
-
-          <button className="btn-glass" style={{ marginLeft: 'auto', padding: '12px 24px', border: '1px solid rgba(255,255,255,0.2) !important', color: 'rgba(255,255,255,0.5) !important', fontSize: '12px', flexShrink: 0, borderRadius: 'var(--radius-md)' }} onClick={() => updateState({ screen: 'START', currentQuestion: null })}>Прервать игру</button>
         </div>
       )}
     </div>

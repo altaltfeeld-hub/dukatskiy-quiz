@@ -14,11 +14,12 @@
   /* Typography */
   --font-heading: 'Unbounded', sans-serif;
   --font-body: 'Manrope', sans-serif;
+  --color-overlay: rgba(0, 0, 0, 0.4);
 
   /* Geometry & Shadows */
-  --radius-lg: 20px;
-  --radius-md: 12px;
-  --radius-sm: 8px;
+  --radius-lg: 40px;
+  --radius-md: 20px;
+  --radius-sm: 12px;
   --shadow-card: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   --glass-border: 1px solid rgba(255, 255, 255, 0.05);
 }

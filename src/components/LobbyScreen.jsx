@@ -51,7 +51,7 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
       <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', paddingBottom: '20px' }}>
         <button 
           className="btn-glass"
-          style={{ padding: '10px 20px', borderRadius: 'var(--radius-md)', fontSize: '14px' }} 
+          style={{ padding: '12px 24px', borderRadius: 'var(--radius-md) !important', fontSize: '14px', background: 'rgba(255,255,255,0.05) !important' }} 
           onClick={() => {
              updateState({ screen: 'START', host: '', players: [] });
              setRole(null);
@@ -61,36 +61,36 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
       </div>
 
       <div className="stacked-content" style={{ alignItems: 'center' }}>
-        <h1 style={{ fontSize: 'clamp(24px, 5vw, 42px)', color: 'var(--color-teal)', textAlign: 'center', marginBottom: '1rem' }}>
+        <h1 style={{ fontSize: 'clamp(28px, 6vw, 48px)', color: 'var(--color-teal)', textAlign: 'center', marginBottom: '1.5rem', fontWeight: '900', letterSpacing: '2px' }}>
           КОМНАТА ОЖИДАНИЯ
         </h1>
         
         {/* If I am the Host */}
         {role === 'HOST' ? (
-          <div style={{ textAlign: 'center', width: '100%', maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          <div style={{ textAlign: 'center', width: '100%', maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
             <div>
-              <h2 style={{ color: 'var(--color-pink)', marginBottom: '0.5rem' }}>Вы Ведущий 👑</h2>
-              <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem' }}>Впишите сюда всех игроков. Когда они перейдут по ссылке, они увидят свое приглашение!</p>
+              <h2 style={{ color: 'var(--color-pink)', marginBottom: '0.5rem', fontSize: '28px', fontWeight: '900' }}>Вы Ведущий 👑</h2>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem', fontWeight: '500' }}>Впишите сюда всех игроков. Когда они перейдут по ссылке, они увидят свое приглашение!</p>
             </div>
             
-            <form onSubmit={handleHostAddPlayer} style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <form onSubmit={handleHostAddPlayer} style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', justifyContent: 'center' }}>
               <input 
                 type="text" 
                 value={inviteName} 
                 onChange={(e) => setInviteName(e.target.value)} 
                 placeholder="Имя карточки (Игрок)"
                 style={{ 
-                  padding: '16px', fontSize: '18px', background: 'rgba(0,0,0,0.3)', color: 'white', 
+                  padding: '18px 24px', fontSize: '18px', background: 'rgba(0,0,0,0.3)', color: 'white', 
                   border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-md)', outline: 'none', 
-                  flex: '1', minWidth: '200px', maxWidth: '300px' 
+                  flex: '1', minWidth: '250px', maxWidth: '350px', fontWeight: '600'
                 }}
               />
-              <button className="btn-glass" type="submit" style={{ padding: '16px 32px', fontSize: '18px', background: 'var(--color-teal)', color: 'var(--color-bg-deep)', borderRadius: 'var(--radius-md) !important', border: 'none' }}>
+              <button className="btn-glass" type="submit" style={{ padding: '18px 36px', fontSize: '18px', background: 'var(--color-teal)', color: 'var(--color-bg-deep)', borderRadius: 'var(--radius-md) !important', border: 'none', fontWeight: '900' }}>
                 Добавить
               </button>
             </form>
 
-            <button className="btn-glass" onClick={handleStartGame} style={{ padding: '24px 48px', fontSize: '24px', background: 'var(--color-pink) !important', color: 'white !important', borderRadius: 'var(--radius-lg) !important', alignSelf: 'center', fontWeight: '900' }}>
+            <button className="btn-glass" onClick={handleStartGame} style={{ padding: '28px 56px', fontSize: '28px', background: 'var(--color-pink) !important', color: 'white !important', borderRadius: 'var(--radius-lg) !important', alignSelf: 'center', fontWeight: '900', boxShadow: '0 0 40px rgba(232, 93, 141, 0.3)', border: 'none !important' }}>
               НАЧАТЬ КВИЗ ВСЕМ
             </button>
           </div>
@@ -99,27 +99,27 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '800px' }}>
             
             {state.host !== 'assigned' ? (
-              <div style={{ textAlign: 'center', padding: '40px 0' }}>
-                <h2 style={{ color: 'white', marginBottom: '20px' }}>Ожидаем Ведущего...</h2>
-                <button onClick={attemptBecomeHost} className="btn-glass" style={{ padding: '12px 24px', borderRadius: 'var(--radius-sm)' }}>
+              <div style={{ textAlign: 'center', padding: '50px 0' }}>
+                <h2 style={{ color: 'white', marginBottom: '25px', fontSize: '28px', fontWeight: '800' }}>Ожидаем Ведущего...</h2>
+                <button onClick={attemptBecomeHost} className="btn-glass" style={{ padding: '16px 32px', borderRadius: 'var(--radius-md) !important', fontSize: '18px', fontWeight: '900' }}>
                   Я Ведущий 👑
                 </button>
               </div>
             ) : (
               <div style={{ width: '100%' }}>
                 {hasClaimedSpot ? (
-                   <h2 style={{ color: 'var(--color-teal)', textAlign: 'center', padding: '40px 0' }}>Вы вошли! Ждем старта от Ведущего...</h2>
+                   <h2 style={{ color: 'var(--color-teal)', textAlign: 'center', padding: '50px 0', fontSize: '24px', fontWeight: '800' }}>ВЫ ВОШЛИ! ✨ Ждем старта от Ведущего...</h2>
                 ) : (
-                  <div style={{ background: 'var(--color-bg-card)', padding: '40px 20px', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(232, 93, 141, 0.3)', boxShadow: '0 0 40px rgba(232, 93, 141, 0.1)', width: '100%', textAlign: 'center' }}>
-                    <h2 style={{ color: 'var(--color-text-main)', marginBottom: '10px' }}>ВАС ПРИГЛАСИЛИ В ИГРУ!</h2>
-                    <p style={{ color: 'var(--color-text-muted)', marginBottom: '30px' }}>Ведущий создал карточки. Найдите себя в списке ниже:</p>
+                  <div style={{ background: 'var(--color-bg-card)', padding: '50px 30px', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(232, 93, 141, 0.3)', boxShadow: '0 0 50px rgba(232, 93, 141, 0.1)', width: '100%', textAlign: 'center' }}>
+                    <h2 style={{ color: 'var(--color-text-main)', marginBottom: '15px', fontSize: '28px', fontWeight: '900' }}>ВАС ПРИГЛАСИЛИ В ИГРУ!</h2>
+                    <p style={{ color: 'var(--color-text-muted)', marginBottom: '40px', fontSize: '18px' }}>Ведущий создал карточки. Найдите себя в списке ниже:</p>
                     
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                      {state.players.filter(p => !p.connected).length === 0 ? (
-                        <p style={{ color: 'var(--color-pink)' }}>Пока нет доступных приглашений...</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                      {players.filter(p => !p.connected).length === 0 ? (
+                        <p style={{ color: 'var(--color-pink)', fontSize: '20px', fontWeight: '700' }}>Пока нет доступных приглашений...</p>
                       ) : (
-                        state.players.filter(p => !p.connected).map(p => (
-                          <button key={p.id} onClick={() => claimSpot(p.id)} className="btn-glass" style={{ padding: '20px', borderRadius: 'var(--radius-md)', fontSize: '20px' }}>
+                        players.filter(p => !p.connected).map(p => (
+                          <button key={p.id} onClick={() => claimSpot(p.id)} className="btn-glass" style={{ padding: '25px', borderRadius: 'var(--radius-md) !important', fontSize: '24px', fontWeight: '900' }}>
                             Я {p.name}! 👋
                           </button>
                         ))
@@ -133,23 +133,23 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
         )}
 
         {/* Global Roster */}
-        <div style={{ width: '100%', maxWidth: '800px', marginTop: '2rem' }}>
-          <h3 style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--color-text-muted)' }}>
+        <div style={{ width: '100%', maxWidth: '900px', marginTop: '3.5rem' }}>
+          <h3 style={{ textAlign: 'center', marginBottom: '2rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '14px', fontWeight: '800' }}>
             Игроки в лобби ({players.length})
           </h3>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' }}>
             {players.map((p, i) => (
               <div key={i} className="btn-glass" style={{ 
-                padding: '12px 20px', borderRadius: 'var(--radius-lg)', fontSize: '16px', 
+                padding: '15px 25px', borderRadius: 'var(--radius-lg) !important', fontSize: '18px', 
                 background: p.connected ? 'rgba(127, 215, 205, 0.1) !important' : 'rgba(255,255,255,0.02) !important',
-                border: p.connected ? '1px solid var(--color-teal) !important' : '1px dashed var(--color-text-muted) !important',
+                border: p.connected ? '2px solid var(--color-teal) !important' : '1px dashed var(--color-text-muted) !important',
                 color: p.connected ? 'var(--color-teal)' : 'var(--color-text-muted)',
-                pointerEvents: 'none'
+                pointerEvents: 'none', fontWeight: '800'
               }}>
                 {p.name} {p.connected ? '🟢' : '⏳'}
               </div>
             ))}
-            {players.length === 0 && <span style={{ color: 'var(--color-text-muted)' }}>Ожидание игроков...</span>}
+            {players.length === 0 && <span style={{ color: 'var(--color-text-muted)', fontWeight: '600' }}>Ожидание игроков...</span>}
           </div>
         </div>
       </div>
