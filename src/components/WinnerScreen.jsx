@@ -19,7 +19,14 @@ export default function WinnerScreen({ state, updateState }) {
   }, []);
 
   return (
-    <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', minHeight: '100vh', overflow: 'hidden', padding: '40px 20px' }}>
+    <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', height: '100vh', overflow: 'hidden', padding: '20px' }}>
+      
+      {/* Background Icons Layer (Consistency) */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, opacity: 0.05, display: 'flex', flexWrap: 'wrap', gap: '100px', justifyContent: 'center', padding: '60px' }}>
+        {Array.from({ length: 8 }).map((_, i) => (
+          <motion.div key={i} animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }} transition={{ duration: 7 + i, repeat: Infinity }} style={{ width: '100px', height: '100px', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundImage: i % 2 === 0 ? 'url(/emblem.jpg)' : 'url(/rat.jpg)', filter: 'grayscale(100%) brightness(1.5)' }} />
+        ))}
+      </div>
       
       {/* VFX Overlay */}
       <motion.div 
@@ -51,10 +58,10 @@ export default function WinnerScreen({ state, updateState }) {
         
         <motion.div 
           initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1 }}
-          style={{ marginBottom: '40px' }}
+          style={{ marginBottom: '20px' }}
         >
-          <div style={{ fontSize: '24px', color: 'var(--color-teal)', fontWeight: '900', letterSpacing: '8px', marginBottom: '10px' }}>ИГРА ЗАВЕРШЕНА</div>
-          <h1 style={{ fontSize: 'clamp(48px, 12vw, 96px)', color: 'white', fontWeight: '900', lineHeight: 1, margin: 0, textShadow: '0 0 60px rgba(232, 93, 141, 0.4)' }}>
+          <div style={{ fontSize: '18px', color: 'var(--color-teal)', fontWeight: '900', letterSpacing: '8px', marginBottom: '5px' }}>ИГРА ЗАВЕРШЕНА</div>
+          <h1 style={{ fontSize: 'clamp(32px, 8vw, 64px)', color: 'white', fontWeight: '900', lineHeight: 1, margin: 0, textShadow: '0 0 60px rgba(232, 93, 141, 0.4)' }}>
             ПОБЕДИТЕЛЬ!
           </h1>
         </motion.div>
@@ -89,9 +96,9 @@ export default function WinnerScreen({ state, updateState }) {
         </div>
 
         {/* Final Standings Small Table */}
-        <div className="btn-glass" style={{ width: '100%', maxWidth: '700px', padding: '40px', borderRadius: 'var(--radius-lg) !important', background: 'rgba(255,255,255,0.01) !important', textAlign: 'left', marginBottom: '50px' }}>
-           <h3 style={{ fontSize: '14px', color: 'var(--color-text-muted)', textTransform: 'uppercase', marginBottom: '30px', letterSpacing: '4px', fontWeight: '900' }}>ИТОГОВАЯ ТАБЛИЦА</h3>
-           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <div className="btn-glass" style={{ width: '100%', maxWidth: '700px', padding: '20px 40px', borderRadius: 'var(--radius-lg) !important', background: 'rgba(255,255,255,0.01) !important', textAlign: 'left', marginBottom: '30px' }}>
+           <h3 style={{ fontSize: '12px', color: 'var(--color-text-muted)', textTransform: 'uppercase', marginBottom: '15px', letterSpacing: '4px', fontWeight: '900' }}>ИТОГОВАЯ ТАБЛИЦА</h3>
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
              {sortedPlayers.map((p, idx) => (
                <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '12px', borderBottom: idx !== sortedPlayers.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
                  <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
@@ -104,11 +111,10 @@ export default function WinnerScreen({ state, updateState }) {
            </div>
         </div>
 
-        {/* Reboot Button */}
         <button
           className="btn-glass"
           style={{ 
-            padding: '24px 64px', fontSize: '24px', 
+            padding: '16px 48px', fontSize: '18px', 
             background: 'var(--color-pink) !important', color: 'white !important', 
             borderRadius: 'var(--radius-lg) !important', fontWeight: '900',
             boxShadow: '0 0 50px rgba(232, 93, 141, 0.3)',

@@ -1,33 +1,24 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function LobbyScreen({ state, updateState, role, setRole }) {
   const [inviteName, setInviteName] = useState('');
   const [hasClaimedSpot, setHasClaimedSpot] = useState(false);
 
   const players = state.players || [];
-  const hostStatus = state.host || '';
-
-  // Host adds a pending participant
+  
   const handleHostAddPlayer = (e) => {
     e.preventDefault();
     if (!inviteName.trim()) return;
-    
     const newPlayer = { id: Date.now().toString(), name: inviteName.trim(), score: 0, connected: false };
-    updateState({
-      players: [...players, newPlayer]
-    });
+    updateState({ players: [...players, newPlayer] });
     setInviteName('');
   };
 
-  // Player claims a spot created by the host
   const claimSpot = (playerId) => {
     setHasClaimedSpot(true);
     setRole('PLAYER');
-    
-    // Mark as connected
-    const updatedPlayers = players.map(p => 
-      p.id === playerId ? { ...p, connected: true } : p
-    );
+    const updatedPlayers = players.map(p => p.id === playerId ? { ...p, connected: true } : p);
     updateState({ players: updatedPlayers });
   };
 
@@ -37,91 +28,57 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
   };
 
   const handleStartGame = () => {
-    if (players.length === 0) {
-      alert('Нет добавленных игроков!');
-      return;
-    }
+    if (players.length === 0) return alert('Нет добавленных игроков!');
     updateState({ screen: 'ROUND_SELECT' });
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', overflow: 'hidden' }}>
       
-      {/* Header Area */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', paddingBottom: '20px' }}>
-        <button 
-          className="btn-glass"
-          style={{ padding: '12px 24px', borderRadius: 'var(--radius-md) !important', fontSize: '14px', background: 'rgba(255,255,255,0.05) !important' }} 
-          onClick={() => {
-             updateState({ screen: 'START', host: '', players: [] });
-             setRole(null);
-          }}>
-          🏠 На главный
-        </button>
+      {/* Background Icons Layer */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, opacity: 0.05, display: 'flex', flexWrap: 'wrap', gap: '80px', justifyContent: 'center', padding: '40px' }}>
+        {Array.from({ length: 8 }).map((_, i) => (
+          <motion.div key={i} animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }} transition={{ duration: 6 + i, repeat: Infinity }} style={{ width: '100px', height: '100px', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundImage: i % 2 === 0 ? 'url(/emblem.jpg)' : 'url(/rat.jpg)', filter: 'grayscale(100%) brightness(1.5)' }} />
+        ))}
       </div>
 
-      <div className="stacked-content" style={{ alignItems: 'center' }}>
-        <h1 style={{ fontSize: 'clamp(28px, 6vw, 48px)', color: 'var(--color-teal)', textAlign: 'center', marginBottom: '1.5rem', fontWeight: '900', letterSpacing: '2px' }}>
-          КОМНАТА ОЖИДАНИЯ
-        </h1>
+      <div className="stacked-content" style={{ alignItems: 'center', zIndex: 1, width: '100%', gap: '1.5rem' }}>
+        <h1 style={{ fontSize: 'clamp(24px, 5vw, 42px)', color: 'var(--color-teal)', textAlign: 'center', fontWeight: '900', letterSpacing: '2px', marginBottom: '0.5rem' }}>КОМНАТА ОЖИДАНИЯ</h1>
         
-        {/* If I am the Host */}
         {role === 'HOST' ? (
-          <div style={{ textAlign: 'center', width: '100%', maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+          <div style={{ textAlign: 'center', width: '100%', maxWidth: '700px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div>
-              <h2 style={{ color: 'var(--color-pink)', marginBottom: '0.5rem', fontSize: '28px', fontWeight: '900' }}>Вы Ведущий 👑</h2>
-              <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem', fontWeight: '500' }}>Впишите сюда всех игроков. Когда они перейдут по ссылке, они увидят свое приглашение!</p>
+              <h2 style={{ color: 'var(--color-pink)', fontSize: '20px', fontWeight: '900', marginBottom: '5px' }}>Вы Ведущий 👑</h2>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>Впишите игроков. Они увидят приглашение!</p>
             </div>
             
-            <form onSubmit={handleHostAddPlayer} style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <input 
-                type="text" 
-                value={inviteName} 
-                onChange={(e) => setInviteName(e.target.value)} 
-                placeholder="Имя карточки (Игрок)"
-                style={{ 
-                  padding: '18px 24px', fontSize: '18px', background: 'rgba(0,0,0,0.3)', color: 'white', 
-                  border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-md)', outline: 'none', 
-                  flex: '1', minWidth: '250px', maxWidth: '350px', fontWeight: '600'
-                }}
-              />
-              <button className="btn-glass" type="submit" style={{ padding: '18px 36px', fontSize: '18px', background: 'var(--color-teal)', color: 'var(--color-bg-deep)', borderRadius: 'var(--radius-md) !important', border: 'none', fontWeight: '900' }}>
-                Добавить
-              </button>
+            <form onSubmit={handleHostAddPlayer} style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+              <input type="text" value={inviteName} onChange={(e) => setInviteName(e.target.value)} placeholder="Имя игрока" style={{ padding: '12px 20px', fontSize: '16px', background: 'rgba(0,0,0,0.4)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-md)', outline: 'none', width: '220px' }} />
+              <button className="btn-glass" type="submit" style={{ padding: '12px 24px', fontSize: '14px', background: 'var(--color-teal)', fontWeight: '900' }}>Добавить</button>
             </form>
 
-            <button className="btn-glass" onClick={handleStartGame} style={{ padding: '28px 56px', fontSize: '28px', background: 'var(--color-pink) !important', color: 'white !important', borderRadius: 'var(--radius-lg) !important', alignSelf: 'center', fontWeight: '900', boxShadow: '0 0 40px rgba(232, 93, 141, 0.3)', border: 'none !important' }}>
-              НАЧАТЬ КВИЗ ВСЕМ
-            </button>
+            <button className="btn-glass" onClick={handleStartGame} style={{ padding: '20px 50px', fontSize: '22px', background: 'var(--color-pink) !important', color: 'white !important', borderRadius: 'var(--radius-lg) !important', alignSelf: 'center', fontWeight: '900', boxShadow: '0 0 30px rgba(232, 93, 141, 0.2)' }}>НАЧАТЬ КВИЗ ВСЕМ</button>
           </div>
         ) : (
-          /* If I am NOT the Host */
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '800px' }}>
-            
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '700px' }}>
             {state.host !== 'assigned' ? (
-              <div style={{ textAlign: 'center', padding: '50px 0' }}>
-                <h2 style={{ color: 'white', marginBottom: '25px', fontSize: '28px', fontWeight: '800' }}>Ожидаем Ведущего...</h2>
-                <button onClick={attemptBecomeHost} className="btn-glass" style={{ padding: '16px 32px', borderRadius: 'var(--radius-md) !important', fontSize: '18px', fontWeight: '900' }}>
-                  Я Ведущий 👑
-                </button>
+              <div style={{ textAlign: 'center' }}>
+                <h2 style={{ color: 'white', marginBottom: '20px', fontSize: '22px' }}>Ожидаем Ведущего...</h2>
+                <button onClick={attemptBecomeHost} className="btn-glass" style={{ padding: '12px 24px', fontSize: '16px', fontWeight: '900' }}>Я Ведущий 👑</button>
               </div>
             ) : (
               <div style={{ width: '100%' }}>
                 {hasClaimedSpot ? (
-                   <h2 style={{ color: 'var(--color-teal)', textAlign: 'center', padding: '50px 0', fontSize: '24px', fontWeight: '800' }}>ВЫ ВОШЛИ! ✨ Ждем старта от Ведущего...</h2>
+                   <h2 style={{ color: 'var(--color-teal)', textAlign: 'center', fontSize: '20px', fontWeight: '800' }}>ВЫ ВОШЛИ! ✨ Ждем старта...</h2>
                 ) : (
-                  <div style={{ background: 'var(--color-bg-card)', padding: '50px 30px', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(232, 93, 141, 0.3)', boxShadow: '0 0 50px rgba(232, 93, 141, 0.1)', width: '100%', textAlign: 'center' }}>
-                    <h2 style={{ color: 'var(--color-text-main)', marginBottom: '15px', fontSize: '28px', fontWeight: '900' }}>ВАС ПРИГЛАСИЛИ В ИГРУ!</h2>
-                    <p style={{ color: 'var(--color-text-muted)', marginBottom: '40px', fontSize: '18px' }}>Ведущий создал карточки. Найдите себя в списке ниже:</p>
-                    
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <div className="btn-glass" style={{ padding: '30px 20px', borderRadius: 'var(--radius-lg) !important', width: '100%', textAlign: 'center', background: 'rgba(255,255,255,0.02) !important' }}>
+                    <h2 style={{ fontSize: '22px', fontWeight: '900', marginBottom: '10px' }}>ВАС ПРИГЛАСИЛИ!</h2>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
                       {players.filter(p => !p.connected).length === 0 ? (
-                        <p style={{ color: 'var(--color-pink)', fontSize: '20px', fontWeight: '700' }}>Пока нет доступных приглашений...</p>
+                        <p style={{ color: 'var(--color-pink)', fontSize: '14px' }}>Пока нет приглашений...</p>
                       ) : (
                         players.filter(p => !p.connected).map(p => (
-                          <button key={p.id} onClick={() => claimSpot(p.id)} className="btn-glass" style={{ padding: '25px', borderRadius: 'var(--radius-md) !important', fontSize: '24px', fontWeight: '900' }}>
-                            Я {p.name}! 👋
-                          </button>
+                          <button key={p.id} onClick={() => claimSpot(p.id)} className="btn-glass" style={{ padding: '15px', fontSize: '18px', fontWeight: '900' }}>Я {p.name}! 👋</button>
                         ))
                       )}
                     </div>
@@ -132,26 +89,16 @@ export default function LobbyScreen({ state, updateState, role, setRole }) {
           </div>
         )}
 
-        {/* Global Roster */}
-        <div style={{ width: '100%', maxWidth: '900px', marginTop: '3.5rem' }}>
-          <h3 style={{ textAlign: 'center', marginBottom: '2rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '14px', fontWeight: '800' }}>
-            Игроки в лобби ({players.length})
-          </h3>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' }}>
+        <div style={{ width: '100%', maxWidth: '800px', marginTop: '1rem' }}>
+          <h3 style={{ textAlign: 'center', marginBottom: '1rem', color: 'var(--color-text-muted)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '2px' }}>Игроки в лобби ({players.length})</h3>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
             {players.map((p, i) => (
-              <div key={i} className="btn-glass" style={{ 
-                padding: '15px 25px', borderRadius: 'var(--radius-lg) !important', fontSize: '18px', 
-                background: p.connected ? 'rgba(127, 215, 205, 0.1) !important' : 'rgba(255,255,255,0.02) !important',
-                border: p.connected ? '2px solid var(--color-teal) !important' : '1px dashed var(--color-text-muted) !important',
-                color: p.connected ? 'var(--color-teal)' : 'var(--color-text-muted)',
-                pointerEvents: 'none', fontWeight: '800'
-              }}>
-                {p.name} {p.connected ? '🟢' : '⏳'}
-              </div>
+              <div key={i} className="btn-glass" style={{ padding: '10px 20px', borderRadius: '40px !important', fontSize: '14px', background: p.connected ? 'rgba(127, 215, 205, 0.1) !important' : 'rgba(255,255,255,0.02) !important', color: p.connected ? 'var(--color-teal)' : 'var(--color-text-muted)', fontWeight: '800' }}>{p.name} {p.connected ? '🟢' : '⏳'}</div>
             ))}
-            {players.length === 0 && <span style={{ color: 'var(--color-text-muted)', fontWeight: '600' }}>Ожидание игроков...</span>}
           </div>
         </div>
+
+        <button className="btn-glass" style={{ padding: '10px 20px', fontSize: '12px', opacity: 0.5 }} onClick={() => updateState({ screen: 'START', host: '', players: [] })}>На главную</button>
       </div>
     </div>
   );
