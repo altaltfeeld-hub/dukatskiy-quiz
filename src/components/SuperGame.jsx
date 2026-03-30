@@ -120,14 +120,15 @@ export default function SuperGame({ state, updateState, role }) {
 
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '30px' }}>
                 {state.players.map(p => (
-                  <button 
-                    key={p.id}
-                    className="btn-glass"
-                    style={{ padding: '12px 20px', border: '1px solid var(--color-teal) !important', color: 'var(--color-teal) !important' }}
-                    onClick={() => addScore(p.id, rewardAmount)}
-                  >
-                    + {p.name} ({p.score})
-                  </button>
+                  <div key={p.id} style={{ display: 'flex', gap: '2px', alignItems: 'center' }}>
+                    <button onClick={() => addScore(p.id, -rewardAmount)} className="btn-glass" style={{ padding: '10px 14px', background: 'rgba(232, 93, 141, 0.1) !important', border: '1px solid var(--color-pink) !important', color: 'var(--color-pink) !important', borderRadius: 'var(--radius-md) 0 0 var(--radius-md)', fontSize: '13px' }}>
+                      -
+                    </button>
+                    <div style={{ padding: '10px 14px', background: 'rgba(255,255,255,0.05)', fontSize: '13px', minWidth: '80px', textAlign: 'center', fontWeight: 'bold' }}>{p.name}</div>
+                    <button onClick={() => addScore(p.id, rewardAmount)} className="btn-glass" style={{ padding: '10px 14px', background: 'rgba(127, 215, 205, 0.1) !important', border: '1px solid var(--color-teal) !important', color: 'var(--color-teal) !important', borderRadius: '0 var(--radius-md) var(--radius-md) 0', fontSize: '13px' }}>
+                      +
+                    </button>
+                  </div>
                 ))}
               </div>
 

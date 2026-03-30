@@ -19,7 +19,7 @@ export default function App() {
       case 'LOBBY':
         return <LobbyScreen state={state} updateState={updateState} role={role} setRole={setRole} />;
       case 'ROUND_SELECT':
-        return <RoundSelect players={state.players} updateState={updateState} />;
+        return <RoundSelect state={state} updateState={updateState} />;
       case 'TABLE':
         return <GameTable state={state} updateState={updateState} role={role} />;
       case 'QUESTION':
