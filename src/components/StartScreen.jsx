@@ -46,17 +46,56 @@ export default function StartScreen({ updateState }) {
               >
                 ✕
               </button>
-              <h2 style={{ color: 'var(--color-pink)', marginBottom: '25px', fontSize: '28px', fontWeight: '900', letterSpacing: '2px' }}>ПРАВИЛА И МЕХАНИКА</h2>
-              <div style={{ color: 'var(--color-text-main)', lineHeight: '1.6', fontSize: '16px' }}>
-                <p style={{ marginBottom: '15px' }}><strong>Краткая суть:</strong> Интерактивный квиз для участников Клуба Дукатов. Состязание в знании контекста, мемов и брендов.</p>
-                <div style={{ margin: '20px 0', borderLeft: '3px solid var(--color-teal)', paddingLeft: '20px', background: 'rgba(255, 255, 255, 0.02)', padding: '15px' }}>
-                  <p style={{ fontWeight: '900', color: 'var(--color-teal)', marginBottom: '8px' }}>КАК ИГРАТЬ:</p>
-                  <ul style={{ paddingLeft: '20px', listStyleType: 'square' }}>
-                    <li><strong>Ведущий:</strong> Ожидает в лобби, зачитывает вопросы и начисляет баллы.</li>
-                    <li><strong>Игроки:</strong> Присоединяются по ссылке и выбирают свою карточку участника.</li>
-                    <li><strong>Модификаторы:</strong> Специальные события, где ставку определяет только Ведущий в реальном времени.</li>
+              <h2 style={{ color: 'var(--color-pink)', marginBottom: '25px', fontSize: '26px', fontWeight: '900', letterSpacing: '2px' }}>ПРАВИЛА И МЕХАНИКА</h2>
+              <div style={{ color: 'white', lineHeight: '1.7', fontSize: '15px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                
+                {/* Intro */}
+                <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px' }}>
+                  Дукатский Квиз — это командное интеллектуальное соревнование для участников KD Club. Два раунда вопросов, финальная Супер-Игра и один победитель.
+                </p>
+
+                {/* Structure */}
+                <div style={{ borderLeft: '3px solid var(--color-teal)', paddingLeft: '18px' }}>
+                  <p style={{ fontWeight: '900', color: 'var(--color-teal)', marginBottom: '10px', letterSpacing: '1px' }}>📋 СТРУКТУРА ИГРЫ</p>
+                  <ul style={{ paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '6px', color: 'rgba(255,255,255,0.85)' }}>
+                    <li><strong style={{ color: 'white' }}>Раунд 1</strong> — 15 вопросов по 3 темам (5 вопросов на тему). Стоимость: 100–500 дукатов.</li>
+                    <li><strong style={{ color: 'white' }}>Раунд 2</strong> — 25 вопросов по 5 темам (5 вопросов на тему). Стоимость: 100–500 дукатов.</li>
+                    <li><strong style={{ color: 'white' }}>Супер-Игра</strong> — Финал. Выбирается одна тема из нескольких. Ставка — до 3000 дукатов.</li>
                   </ul>
                 </div>
+
+                {/* Scoring */}
+                <div style={{ borderLeft: '3px solid var(--color-pink)', paddingLeft: '18px' }}>
+                  <p style={{ fontWeight: '900', color: 'var(--color-pink)', marginBottom: '10px', letterSpacing: '1px' }}>💎 НАЧИСЛЕНИЕ БАЛЛОВ</p>
+                  <ul style={{ paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '6px', color: 'rgba(255,255,255,0.85)' }}>
+                    <li>Правильный ответ → <strong style={{ color: 'var(--color-teal)' }}>+N дукатов</strong> (указано на клетке).</li>
+                    <li>Неправильный ответ → <strong style={{ color: 'var(--color-pink)' }}>−N дукатов</strong> (штраф).</li>
+                    <li>Ведущий нажимает <strong style={{ color: 'white' }}>«+»</strong> или <strong style={{ color: 'white' }}>«−»</strong> напротив нужного игрока.</li>
+                    <li>Можно начислить несколько игрокам сразу — кто ответил первым / дополнил.</li>
+                  </ul>
+                </div>
+
+                {/* Modifiers */}
+                <div style={{ borderLeft: '3px solid #FFD700', paddingLeft: '18px' }}>
+                  <p style={{ fontWeight: '900', color: '#FFD700', marginBottom: '10px', letterSpacing: '1px' }}>⚡ МОДИФИКАТОРЫ</p>
+                  <ul style={{ paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '6px', color: 'rgba(255,255,255,0.85)' }}>
+                    <li>Особый тип вопроса. Стоимость определяется <strong style={{ color: 'white' }}>вручную</strong> в момент игры.</li>
+                    <li>Ведущий выбирает сумму и нажимает «Начислить баллы» для нужного игрока.</li>
+                    <li>Примеры: двойная ставка, аукцион баллов, обмен очками между игроками.</li>
+                  </ul>
+                </div>
+
+                {/* Super Game */}
+                <div style={{ borderLeft: '3px solid rgba(232, 93, 141, 0.6)', paddingLeft: '18px' }}>
+                  <p style={{ fontWeight: '900', color: 'white', marginBottom: '10px', letterSpacing: '1px' }}>🚀 СУПЕР-ИГРА</p>
+                  <ul style={{ paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '6px', color: 'rgba(255,255,255,0.85)' }}>
+                    <li>Доступна только после завершения Раунда 2.</li>
+                    <li>Ведущий поочерёдно убирает темы, пока не остаётся одна — финальная.</li>
+                    <li>Максимальная ставка: <strong style={{ color: 'var(--color-teal)' }}>3000 дукатов</strong>. Можно изменить перед начислением.</li>
+                    <li>Побеждает тот, у кого больше всего дукатов по итогу всех раундов.</li>
+                  </ul>
+                </div>
+
               </div>
               <button 
                 className="btn-glass"
