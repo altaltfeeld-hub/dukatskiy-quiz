@@ -61,9 +61,19 @@ export default function QuestionScreen({ state, updateState, role }) {
       <div className="container animate-fade" style={{ paddingTop: '50px', textAlign: 'center' }}>
         <h2 style={{ fontSize: '36px', color: 'var(--color-teal)', marginBottom: '40px' }}>Панель модификатора</h2>
         
-        <div style={{ background: 'var(--color-bg-card)', padding: '40px', borderRadius: 'var(--radius-lg)', maxWidth: '600px', margin: '0 auto' }}>
-           <h3 style={{ marginBottom: '20px' }}>Назначить баллы:</h3>
-           <input type="number" value={modifierPoints} onChange={e => setModifierPoints(e.target.value)} style={{ padding: '16px', fontSize: '24px', width: '100%', marginBottom: '20px', background: 'rgba(0,0,0,0.3)', color: 'white', border: '1px solid var(--color-teal)', borderRadius: 'var(--radius-md)' }} />
+         <div style={{ background: 'var(--color-bg-card)', padding: '40px', borderRadius: 'var(--radius-lg)', maxWidth: '600px', margin: '0 auto', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <h3 style={{ marginBottom: '25px', fontSize: '20px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--color-teal)' }}>Назначить баллы:</h3>
+            <input 
+              type="number" 
+              value={modifierPoints} 
+              onChange={e => setModifierPoints(e.target.value)} 
+              style={{ 
+                padding: '20px', fontSize: '28px', width: '100%', marginBottom: '30px', 
+                background: 'rgba(0,0,0,0.4)', color: 'white', border: '2px solid var(--color-teal)', 
+                borderRadius: 'var(--radius-md)', textAlign: 'center', outline: 'none',
+                boxSizing: 'border-box', boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.5)'
+              }} 
+            />
            
            <h3 style={{ marginBottom: '20px', marginTop: '20px' }}>Игроки (начислить или списать введенные баллы):</h3>
            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
@@ -127,16 +137,11 @@ export default function QuestionScreen({ state, updateState, role }) {
                         alt="Question" 
                         style={{ 
                           width: '100%', height: '100%', objectFit: 'contain', 
-                          filter: isNoBlurTopic ? 'none' : 'blur(8px) brightness(0.8)',
-                          transition: 'filter 0.5s ease'
-                        }} 
-                      />
-                      {!isNoBlurTopic && (
-                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-                          <span className="btn-glass" style={{ padding: '10px 20px', fontSize: '14px', whiteSpace: 'nowrap' }}>ИЗОБРАЖЕНИЕ СКРЫТО</span>
-                        </div>
-                      )}
-                    </div>
+                        filter: isNoBlurTopic ? 'none' : 'blur(12px) brightness(0.7)',
+                        transition: 'filter 0.5s ease'
+                      }} 
+                    />
+                  </div>
                   )}
                   <h1 style={{ fontSize: 'clamp(24px, 6vw, 48px)', textAlign: 'center', lineHeight: '1.2', margin: 0 }}>{q.text}</h1>
                 </>

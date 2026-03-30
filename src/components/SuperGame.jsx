@@ -68,30 +68,26 @@ export default function SuperGame({ state, updateState, role }) {
                  <p style={{ fontSize: 'clamp(24px, 5vw, 48px)', lineHeight: '1.3', margin: 0 }}>{finalQ.text}</p>
                );
             } else {
-               const qImage = isSpecialCropTopic ? `quiz/cropped/${imageFile}` : imageFile;
-               return (
-                 <>
-                   {qImage && (
-                     <div style={{ position: 'relative', width: '100%', maxHeight: '40vh', overflow: 'hidden', borderRadius: 'var(--radius-md)' }}>
-                       <img 
-                          src={`/${qImage}`} 
-                          alt="Question" 
-                          style={{ 
-                            width: '100%', height: '100%', objectFit: 'contain', 
-                            filter: isNoBlurTopic ? 'none' : 'blur(15px) brightness(0.8)', 
-                            transition: 'filter 0.5s ease' 
-                          }} 
-                        />
-                       {!isNoBlurTopic && (
-                         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-                            <span className="btn-glass" style={{ padding: '10px 20px', fontSize: '14px' }}>ИЗОБРАЖЕНИЕ СКРЫТО</span>
-                         </div>
-                       )}
-                     </div>
-                   )}
-                   <p style={{ fontSize: 'clamp(24px, 5vw, 48px)', lineHeight: '1.3', margin: 0 }}>{finalQ.text}</p>
-                 </>
-               );
+              // Question Phase
+              const qImage = isSpecialCropTopic ? `quiz/cropped/${imageFile}` : imageFile;
+              return (
+                <>
+                  {qImage && (
+                    <div style={{ position: 'relative', width: '100%', maxHeight: '45vh', overflow: 'hidden', borderRadius: 'var(--radius-md)', marginBottom: '20px' }}>
+                      <img 
+                        src={`/${qImage}`} 
+                        alt="Question" 
+                        style={{ 
+                          width: '100%', height: '100%', objectFit: 'contain', 
+                          filter: isNoBlurTopic ? 'none' : 'blur(12px) brightness(0.7)',
+                          transition: 'filter 0.5s ease'
+                        }} 
+                      />
+                    </div>
+                  )}
+                  <h1 style={{ fontSize: 'clamp(24px, 6vw, 48px)', textAlign: 'center', lineHeight: '1.2', margin: 0 }}>{finalQ.text}</h1>
+                </>
+              );
             }
           })()}
           
@@ -113,7 +109,12 @@ export default function SuperGame({ state, updateState, role }) {
                   type="number" 
                   value={rewardAmount} 
                   onChange={e => setRewardAmount(e.target.value)}
-                  style={{ width: '120px', padding: '10px', fontSize: '20px', background: 'rgba(0,0,0,0.3)', color: 'white', border: '1px solid var(--color-teal)', borderRadius: 'var(--radius-sm)', textAlign: 'center' }}
+                  style={{ 
+                    width: '140px', padding: '12px', fontSize: '24px', 
+                    background: 'rgba(0,0,0,0.4)', color: 'white', 
+                    border: '2px solid var(--color-teal)', borderRadius: 'var(--radius-sm)', 
+                    textAlign: 'center', outline: 'none', boxSizing: 'border-box'
+                  }}
                 />
               </div>
 
