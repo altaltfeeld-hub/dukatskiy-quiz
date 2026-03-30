@@ -32,244 +32,175 @@ export default function SuperGame({ state, updateState, role }) {
     updateState({ players: updatedPlayers });
   };
 
-  // Side Dashboard (Scoreboard)
-  const SideScoreboard = () => (
+  // Sleek Sidebar Scoreboard (Consistent with QuestionScreen)
+  const BroadcastScoreboard = () => (
     <div style={{ 
-      position: 'fixed', right: '20px', top: '50%', transform: 'translateY(-50%)', 
-      width: '180px', background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(10px)',
-      padding: '15px', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(255,255,255,0.1)',
-      display: 'flex', flexDirection: 'column', gap: '10px', zIndex: 1000,
-      boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+      width: '240px', height: '100vh', 
+      background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(30px)',
+      borderLeft: '1px solid rgba(255,255,255,0.1)',
+      display: 'flex', flexDirection: 'column', padding: '30px 20px', zIndex: 100
     }}>
-      <h3 style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--color-teal)', letterSpacing: '1px', marginBottom: '5px' }}>Счёт игры</h3>
-      {state.players.map(p => (
-        <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '14px', fontWeight: 'bold' }}>{p.name}</span>
-          <span style={{ fontSize: '16px', color: 'var(--color-pink)', fontWeight: '800' }}>{p.score}</span>
-        </div>
-      ))}
+      <div style={{ fontSize: '12px', textTransform: 'uppercase', color: 'var(--color-teal)', letterSpacing: '2px', fontWeight: '900', marginBottom: '25px', opacity: 0.7 }}>
+        Счёт игры
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', overflowY: 'auto' }}>
+        {players.sort((a, b) => b.score - a.score).map((p, idx) => (
+          <motion.div 
+            key={p.id}
+            initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
+            style={{ 
+              display: 'flex', flexDirection: 'column', gap: '4px',
+              borderLeft: idx === 0 ? '3px solid var(--color-teal)' : '1px solid rgba(255,255,255,0.1)',
+              paddingLeft: '15px'
+            }}
+          >
+            <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.6)', fontWeight: 'bold' }}>{p.name}</div>
+            <div style={{ fontSize: '24px', color: idx === 0 ? 'white' : 'var(--color-pink)', fontWeight: '900' }}>{p.score}</div>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 
-  if (openedFinal && remaining.length === 1) {
-    const finalQ = remaining[0];
-    return (
-      <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', textAlign: 'center', padding: '40px 0' }}>
-        <SideScoreboard />
-        
-        {/* Timer Bar */}
-        {!showAnswer && (
-          <div style={{ width: '100%', maxWidth: '800px', background: 'rgba(255,255,255,0.05)', height: '8px', borderRadius: '4px', overflow: 'hidden', marginBottom: '40px' }}>
-            <div style={{ width: `${(timeLeft / 60) * 100}%`, height: '100%', background: 'var(--color-teal)', transition: 'width 1s linear' }} />
-          </div>
-        )}
-
-        <div className="stacked-content" style={{ alignItems: 'center', width: '100%', maxWidth: '1200px' }}>
-          <div>
-            <h1 style={{ color: 'var(--color-pink)', marginBottom: '10px', fontSize: '24px', letterSpacing: '4px' }}>ФИНАЛЬНЫЙ ВОПРОС</h1>
-            <h2 style={{ color: 'var(--color-teal)', marginBottom: '30px', fontSize: '32px' }}>{finalQ.topic}</h2>
-          </div>
-          
-          {(() => {
-            const topicLower = (finalQ.topic || "").toLowerCase().trim();
-            const isNoBlurTopic = topicLower.includes("что по встрече") || topicLower.includes("брендомания");
-            const isBlurAlwaysTopic = (topicLower.includes("угадай мем") || topicLower.includes("куда течет река")) && !isNoBlurTopic;
-            const imageFile = finalQ.image || finalQ.answerImage;
-
-            if (!imageFile) {
-              return showAnswer ? (
-                <p style={{ fontSize: 'clamp(24px, 5vw, 48px)', lineHeight: '1.3', margin: 0 }}>{finalQ.text}</p>
-              ) : (
-                <h1 style={{ fontSize: 'clamp(24px, 6vw, 48px)', textAlign: 'center', lineHeight: '1.2', margin: 0 }}>{finalQ.text}</h1>
-              );
-            }
-
-            const needsBlur = isBlurAlwaysTopic && !showAnswer;
-
-            return (
-              <div style={{ position: 'relative', width: '100%', maxHeight: showAnswer ? '60vh' : '45vh', overflow: 'hidden', borderRadius: 'var(--radius-md)', marginBottom: '20px', boxShadow: 'var(--shadow-card)' }}>
-                 <img 
-                    src={`/${imageFile}`} 
-                    alt="Final Content" 
-                    style={{ 
-                      width: '100%', height: '100%', objectFit: 'contain', 
-                      filter: needsBlur ? 'blur(20px) brightness(0.6)' : (isNoBlurTopic || showAnswer ? 'none' : 'blur(15px) brightness(0.7)'),
-                      transition: 'filter 0.5s ease'
-                    }} 
-                  />
-              </div>
-            );
-          })()}
-          
-          {showAnswer && finalQ.answer && (
-             <motion.div 
-               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-               className="btn-glass" 
-               style={{ marginTop: '10px', padding: '30px', borderRadius: 'var(--radius-md)', fontSize: '32px', color: 'var(--color-teal)', border: '1px solid var(--color-teal) !important' }}
-             >
-               ОТВЕТ: <span style={{ color: 'white' }}>{finalQ.answer}</span>
-             </motion.div>
-          )}
-
-          {role === 'HOST' && (
-            <div className="btn-glass" style={{ marginTop: '40px', padding: '30px', width: '100%', borderRadius: 'var(--radius-lg) !important', background: 'rgba(255,255,255,0.02) !important' }}>
-              <div style={{ marginBottom: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' }}>
-                <span style={{ fontSize: '18px', fontWeight: 'bold' }}>Ставка за верный ответ:</span>
-                <input 
-                  type="number" 
-                  value={rewardAmount} 
-                  onChange={e => setRewardAmount(e.target.value)}
-                  style={{ 
-                    width: '160px', padding: '15px', fontSize: '28px', 
-                    background: 'rgba(0,0,0,0.4)', color: 'white', 
-                    border: '2px solid var(--color-teal)', borderRadius: 'var(--radius-md)', 
-                    textAlign: 'center', outline: 'none', boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-
-              {/* Player Scoring Cards */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center', marginBottom: '40px' }}>
-                {players.map(p => (
-                  <div 
-                    key={p.id} 
-                    className="btn-glass"
-                    style={{ 
-                      display: 'flex', gap: '20px', alignItems: 'center', 
-                      padding: '15px 25px', borderRadius: 'var(--radius-lg) !important',
-                      background: 'rgba(255,255,255,0.03) !important', border: '1px solid rgba(255,255,255,0.08) !important',
-                      minWidth: '220px', flexShrink: 0
-                    }}
-                  >
-                    <div style={{ flex: 1, textAlign: 'left' }}>
-                      <div style={{ fontSize: '18px', fontWeight: '900', color: 'white' }}>{p.name}</div>
-                      <div style={{ fontSize: '14px', color: 'var(--color-pink)', fontWeight: 'bold' }}>{p.score} баллов</div>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                      <button 
-                        onClick={() => addScore(p.id, -rewardAmount)} 
-                        className="btn-glass" 
-                        style={{ 
-                          width: '52px', height: '52px', padding: 0, 
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          background: 'rgba(232, 93, 141, 0.1) !important', color: 'var(--color-pink) !important', 
-                          borderRadius: '50% !important', border: '2px solid var(--color-pink) !important', fontSize: '24px' 
-                        }}
-                      >
-                        -
-                      </button>
-                      <button 
-                        onClick={() => addScore(p.id, rewardAmount)} 
-                        className="btn-glass" 
-                        style={{ 
-                          width: '52px', height: '52px', padding: 0, 
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          background: 'rgba(127, 215, 205, 0.1) !important', color: 'var(--color-teal) !important', 
-                          borderRadius: '50% !important', border: '2px solid var(--color-teal) !important', fontSize: '24px' 
-                        }}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '30px 0' }} />
-
-              <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
-                {!showAnswer && (
-                  <button 
-                    className="btn-glass" 
-                    style={{ padding: '16px 48px', fontSize: '24px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important', borderRadius: 'var(--radius-md) !important', fontWeight: '900' }} 
-                    onClick={() => setShowAnswer(true)}
-                  >
-                    Проверить ответ
-                  </button>
-                )}
-                {showAnswer && (
-                   <button 
-                    className="btn-glass" 
-                    style={{ padding: '16px 48px', fontSize: '24px', background: 'var(--color-pink) !important', color: 'white !important', fontWeight: '900', borderRadius: 'var(--radius-md) !important' }} 
-                    onClick={() => updateState({ screen: 'WINNER_SCREEN' })}
-                  >
-                     🏆 К ПОБЕДИТЕЛЮ
-                   </button>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="container" style={{ paddingTop: '20px' }}>
+    <div className="container" style={{ height: '100vh', width: '100vw', display: 'flex', padding: 0, overflow: 'hidden' }}>
       
-      {/* Header Area */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
-        {role === 'HOST' && (
-          <button 
-            className="btn-glass"
-            style={{ padding: '10px 20px', borderRadius: 'var(--radius-md)', fontSize: '13px' }} 
-            onClick={() => updateState({ screen: 'START' })}>
-            🏠 На главный
-          </button>
-        )}
-      </div>
-
-      <div className="stacked-content" style={{ alignItems: 'center' }}>
-        {/* Scoreboard - Global View */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap', width: '100%' }}>
-          {state.players.map(p => (
-            <div key={p.id} className="btn-glass" style={{
-              padding: '12px 20px', borderRadius: 'var(--radius-md)', 
-              minWidth: '120px', textAlign: 'center', pointerEvents: 'none',
-              borderBottom: '3px solid var(--color-teal) !important'
-            }}>
-              <div style={{ color: 'var(--color-text-muted)', fontSize: '12px', textTransform: 'uppercase', marginBottom: '4px' }}>{p.name}</div>
-              <div style={{ fontSize: '24px', fontWeight: '800', color: 'var(--color-pink)' }}>{p.score}</div>
-            </div>
-          ))}
-        </div>
-
-        <h1 style={{ fontSize: 'clamp(32px, 8vw, 64px)', color: 'var(--color-teal)', textAlign: 'center', margin: '1rem 0' }}>
-          СУПЕР ИГРА
-        </h1>
-
-        {remaining.length > 1 ? (
-          <FragmentList remaining={remaining} onRemove={handleRemove} role={role} />
-        ) : (
-          <div style={{ textAlign: 'center', padding: '40px 0' }}>
-             <h2 style={{ fontSize: '24px', marginBottom: '20px', color: 'var(--color-text-muted)' }}>ОСТАЛАСЬ ОДНА ТЕМА:</h2>
-             <h2 style={{ fontSize: 'clamp(32px, 5vw, 48px)', marginBottom: '40px', color: 'var(--color-pink)' }}>{remaining[0]?.topic}</h2>
-             {role === 'HOST' && remaining.length === 1 && (
-               <button className="btn-glass" style={{ padding: '24px 60px', fontSize: '24px', background: 'var(--color-pink) !important', color: 'white !important', borderRadius: 'var(--radius-lg)' }} onClick={() => setOpenedFinal(true)}>
-                 ИГРАТЬ ФИНАЛ
-               </button>
+      {/* Main Content Area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', position: 'relative' }}>
+          
+          {/* Top Progress / Info Bar */}
+          <div style={{ padding: '20px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.2)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+             <div>
+               <span style={{ color: 'var(--color-teal)', fontWeight: '900', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '4px' }}>СУПЕР-ИГРА</span>
+               {openedFinal && remaining.length === 1 && (
+                 <>
+                   <span style={{ color: 'white', margin: '0 15px', opacity: 0.3 }}>|</span>
+                   <span style={{ color: 'var(--color-pink)', fontWeight: '900', fontSize: '12px' }}>{remaining[0].topic}</span>
+                 </>
+               )}
+             </div>
+             
+             {openedFinal && !showAnswer && (
+               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                 <div style={{ fontSize: '14px', fontWeight: '900', color: timeLeft <= 10 ? 'var(--color-pink)' : 'white' }}>{timeLeft} сек.</div>
+                 <div style={{ width: '100px', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                   <motion.div animate={{ width: `${(timeLeft / 60) * 100}%` }} style={{ height: '100%', background: timeLeft <= 10 ? 'var(--color-pink)' : 'var(--color-teal)' }} />
+                 </div>
+               </div>
              )}
           </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
-function FragmentList({ remaining, onRemove, role }) {
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center', maxWidth: '1000px', width: '100%' }}>
-      {remaining.map(t => (
-        <div key={t.topic} className="btn-glass" style={{ padding: '24px 30px', borderRadius: 'var(--radius-lg)', minWidth: '300px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flex: '1 1 300px' }}>
-          <span style={{ fontSize: '1.5rem', fontWeight: '800' }}>{t.topic}</span>
+          {/* Center Game Area - No Scrolling */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px 40px', overflow: 'hidden' }}>
+             
+             {openedFinal && remaining.length === 1 ? (
+                /* Final Question View */
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+                   {(() => {
+                     const finalQ = remaining[0];
+                     const topicLower = (finalQ.topic || "").toLowerCase().trim();
+                     const isNoBlurTopic = topicLower.includes("что по встрече") || topicLower.includes("брендомания");
+                     const isBlurAlwaysTopic = (topicLower.includes("угадай мем") || topicLower.includes("куда течет река")) && !isNoBlurTopic;
+                     const imageFile = finalQ.image || finalQ.answerImage;
+
+                     if (imageFile) {
+                       return (
+                         <div style={{ width: '100%', maxHeight: showAnswer ? '40vh' : '50vh', overflow: 'hidden', borderRadius: 'var(--radius-md)', display: 'flex', justifyContent: 'center', boxShadow: 'var(--shadow-card)' }}>
+                           <img 
+                              src={`/${imageFile}`} alt="Final"
+                              style={{ 
+                                maxWidth: '100%', maxHeight: '100%', objectFit: 'contain',
+                                filter: (isBlurAlwaysTopic && !showAnswer) ? 'blur(20px) brightness(0.6)' : (isNoBlurTopic || showAnswer ? 'none' : 'blur(15px) brightness(0.7)'),
+                                transition: 'filter 0.5s ease'
+                              }} 
+                           />
+                         </div>
+                       );
+                     }
+                     return <h1 style={{ fontSize: '70px', fontWeight: '900' }}>{finalQ.text}</h1>;
+                   })()}
+
+                   <h2 style={{ fontSize: '32px', color: 'white', fontWeight: '800' }}>{!showAnswer ? remaining[0].text : ''}</h2>
+
+                   {showAnswer && remaining[0].answer && (
+                     <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="btn-glass" style={{ padding: '24px 48px', border: '2px solid var(--color-teal) !important', borderRadius: 'var(--radius-md) !important' }}>
+                        <span style={{ fontSize: '18px', color: 'var(--color-teal)', textTransform: 'uppercase', marginBottom: '5px', fontWeight: '900' }}>Ответ:</span>
+                        <span style={{ fontSize: '42px', fontWeight: '900', color: 'white' }}>{remaining[0].answer}</span>
+                     </motion.div>
+                   )}
+                </div>
+             ) : (
+                /* Topic Removal Phase */
+                <div style={{ textAlign: 'center', width: '100%', maxWidth: '1000px' }}>
+                   <h1 style={{ fontSize: '48px', color: 'var(--color-teal)', fontWeight: '900', marginBottom: '40px' }}>ВЫБОР ТЕМЫ</h1>
+                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' }}>
+                      {SUPER_GAME_DATA.map(t => {
+                        const isRemoved = removedTopics.includes(t.topic);
+                        return (
+                          <div key={t.topic} className="btn-glass" style={{ 
+                            padding: '20px 30px', borderRadius: 'var(--radius-lg) !important', minWidth: '250px',
+                            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                            background: isRemoved ? 'rgba(255,255,255,0.02) !important' : 'rgba(255,255,255,0.05) !important',
+                            opacity: isRemoved ? 0.3 : 1
+                          }}>
+                            <span style={{ fontSize: '1.2rem', fontWeight: '800' }}>{t.topic}</span>
+                            {role === 'HOST' && !isRemoved && remaining.length > 1 && (
+                              <button className="btn-glass" style={{ background: 'rgba(255,50,50,0.1) !important', color: '#ff8888 !important', padding: '6px 12px', fontSize: '11px', fontWeight: '900' }} onClick={() => handleRemove(t.topic)}>УБРАТЬ</button>
+                            )}
+                          </div>
+                        );
+                      })}
+                   </div>
+                   {role === 'HOST' && remaining.length === 1 && !openedFinal && (
+                      <button className="btn-glass" style={{ marginTop: '50px', padding: '24px 64px', fontSize: '28px', background: 'var(--color-pink) !important', color: 'white !important', fontWeight: '900' }} onClick={() => setOpenedFinal(true)}>ИГРАТЬ ФИНАЛ 🚀</button>
+                   )}
+                </div>
+             )}
+          </div>
+
+          {/* Bottom Host Ribbon (Fixed Height) */}
           {role === 'HOST' && (
-            <button className="btn-glass" style={{ background: 'rgba(255,50,50,0.1) !important', color: '#ff8888 !important', padding: '10px 20px', borderRadius: 'var(--radius-md) !important', border: '1px solid rgba(255,50,50,0.2) !important' }} onClick={() => onRemove(t.topic)}>
-              Убрать
-            </button>
+            <div style={{ 
+              padding: '24px 40px', background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(20px)',
+              borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: '20px'
+            }}>
+              
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '15px' }}>
+                  {openedFinal && !showAnswer && (
+                    <button className="btn-glass" style={{ padding: '12px 32px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important', fontWeight: '900' }} onClick={() => setShowAnswer(true)}>ОТКРЫТЬ ОТВЕТ</button>
+                  )}
+                  {showAnswer && (
+                    <button className="btn-glass" style={{ padding: '12px 32px', background: 'var(--color-pink) !important', color: 'white !important', fontWeight: '900' }} onClick={() => updateState({ screen: 'WINNER_SCREEN' })}>🏆 К ПОБЕДИТЕЛЮ</button>
+                  )}
+                  <button className="btn-glass" style={{ padding: '12px 20px', fontSize: '10px', opacity: 0.5 }} onClick={() => updateState({ screen: 'START' })}>На главный</button>
+              </div>
+
+              {openedFinal && (
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Ставка:</span>
+                    <input type="number" value={rewardAmount} onChange={e => setRewardAmount(e.target.value)} style={{ padding: '8px', fontSize: '18px', width: '100px', background: 'rgba(0,0,0,0.3)', color: 'white', border: '1px solid var(--color-teal)', borderRadius: 'var(--radius-md)', textAlign: 'center' }} />
+                  </div>
+                  
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {players.map(p => (
+                      <div key={p.id} className="btn-glass" style={{ padding: '6px 12px', display: 'flex', alignItems: 'center', gap: '10px', borderRadius: '40px !important' }}>
+                        <span style={{ fontSize: '11px', fontWeight: '900' }}>{p.name}</span>
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                          <button onClick={() => addScore(p.id, -rewardAmount)} className="btn-glass" style={{ width: '28px', height: '28px', borderRadius: '50% !important', padding: 0, color: 'var(--color-pink)', border: '1px solid var(--color-pink) !important', fontSize: '14px' }}>-</button>
+                          <button onClick={() => addScore(p.id, rewardAmount)} className="btn-glass" style={{ width: '28px', height: '28px', borderRadius: '50% !important', padding: 0, color: 'var(--color-teal)', border: '1px solid var(--color-teal) !important', fontSize: '14px' }}>+</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
-        </div>
-      ))}
+      </div>
+
+      {/* Consistent Vertical Scoreboard Sidebar */}
+      <BroadcastScoreboard />
     </div>
   );
 }
