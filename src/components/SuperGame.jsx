@@ -31,10 +31,30 @@ export default function SuperGame({ state, updateState, role }) {
     updateState({ players: updatedPlayers });
   };
 
+  // Side Dashboard (Scoreboard)
+  const SideScoreboard = () => (
+    <div style={{ 
+      position: 'fixed', right: '20px', top: '50%', transform: 'translateY(-50%)', 
+      width: '180px', background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(10px)',
+      padding: '15px', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(255,255,255,0.1)',
+      display: 'flex', flexDirection: 'column', gap: '10px', zIndex: 1000,
+      boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+    }}>
+      <h3 style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--color-teal)', letterSpacing: '1px', marginBottom: '5px' }}>Счёт игры</h3>
+      {state.players.map(p => (
+        <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '14px', fontWeight: 'bold' }}>{p.name}</span>
+          <span style={{ fontSize: '16px', color: 'var(--color-pink)', fontWeight: '800' }}>{p.score}</span>
+        </div>
+      ))}
+    </div>
+  );
+
   if (openedFinal && remaining.length === 1) {
     const finalQ = remaining[0];
     return (
       <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', textAlign: 'center', padding: '40px 0' }}>
+        <SideScoreboard />
         
         {/* Timer Bar */}
         {!showAnswer && (
@@ -49,46 +69,35 @@ export default function SuperGame({ state, updateState, role }) {
             <h2 style={{ color: 'var(--color-teal)', marginBottom: '30px', fontSize: '32px' }}>{finalQ.topic}</h2>
           </div>
           
-          {/* Topic-specific Logic */}
           {(() => {
-            const topic = (finalQ.topic || "").toLowerCase().trim();
-            const isSpecialCropTopic = topic.includes("угадай мем") || topic.includes("куда течет река");
-            const isNoBlurTopic = topic.includes("что по встрече") || isSpecialCropTopic;
+            const topicLower = (finalQ.topic || "").toLowerCase().trim();
+            const isNoBlurTopic = topicLower.includes("что по встрече");
+            const isBlurAlwaysTopic = topicLower.includes("угадай мем") || topicLower.includes("куда течет река");
             const imageFile = finalQ.image || finalQ.answerImage;
 
-            if (showAnswer) {
-               const finalImage = finalQ.answerImage || (isSpecialCropTopic ? `quiz/full/${imageFile}` : imageFile);
-               return finalImage ? (
-                 <img 
-                    src={`/${finalImage}`} 
-                    alt="Answer" 
-                    style={{ width: '100%', maxHeight: '40vh', objectFit: 'contain', borderRadius: 'var(--radius-md)' }} 
-                 />
-               ) : (
-                 <p style={{ fontSize: 'clamp(24px, 5vw, 48px)', lineHeight: '1.3', margin: 0 }}>{finalQ.text}</p>
-               );
-            } else {
-              // Question Phase
-              const qImage = isSpecialCropTopic ? `quiz/cropped/${imageFile}` : imageFile;
-              return (
-                <>
-                  {qImage && (
-                    <div style={{ position: 'relative', width: '100%', maxHeight: '45vh', overflow: 'hidden', borderRadius: 'var(--radius-md)', marginBottom: '20px' }}>
-                      <img 
-                        src={`/${qImage}`} 
-                        alt="Question" 
-                        style={{ 
-                          width: '100%', height: '100%', objectFit: 'contain', 
-                          filter: isNoBlurTopic ? 'none' : 'blur(12px) brightness(0.7)',
-                          transition: 'filter 0.5s ease'
-                        }} 
-                      />
-                    </div>
-                  )}
-                  <h1 style={{ fontSize: 'clamp(24px, 6vw, 48px)', textAlign: 'center', lineHeight: '1.2', margin: 0 }}>{finalQ.text}</h1>
-                </>
+            if (!imageFile) {
+              return showAnswer ? (
+                <p style={{ fontSize: 'clamp(24px, 5vw, 48px)', lineHeight: '1.3', margin: 0 }}>{finalQ.text}</p>
+              ) : (
+                <h1 style={{ fontSize: 'clamp(24px, 6vw, 48px)', textAlign: 'center', lineHeight: '1.2', margin: 0 }}>{finalQ.text}</h1>
               );
             }
+
+            const needsBlur = isBlurAlwaysTopic && !showAnswer;
+
+            return (
+              <div style={{ position: 'relative', width: '100%', maxHeight: showAnswer ? '60vh' : '45vh', overflow: 'hidden', borderRadius: 'var(--radius-md)', marginBottom: '20px', boxShadow: 'var(--shadow-card)' }}>
+                 <img 
+                    src={`/${imageFile}`} 
+                    alt="Final Content" 
+                    style={{ 
+                      width: '100%', height: '100%', objectFit: 'contain', 
+                      filter: needsBlur ? 'blur(20px) brightness(0.6)' : (isNoBlurTopic || showAnswer ? 'none' : 'blur(15px) brightness(0.7)'),
+                      transition: 'filter 0.5s ease'
+                    }} 
+                  />
+              </div>
+            );
           })()}
           
           {showAnswer && finalQ.answer && (
