@@ -4,6 +4,11 @@ import { R1_DATA, R2_DATA } from '../data';
 export default function GameTable({ state, updateState, role }) {
   const roundData = state.currentRound === 'R1' ? R1_DATA : R2_DATA;
 
+  const openedR1 = state.openedQuestions.filter(q => q.startsWith('R1_')).length;
+  const openedR2 = state.openedQuestions.filter(q => q.startsWith('R2_')).length;
+  const isR1Done = state.currentRound === 'R1' && openedR1 >= 15;
+  const isR2Done = state.currentRound === 'R2' && openedR2 >= 25;
+
   const handleQuestionClick = (topicIdx, questionIdx, questionData) => {
     if (role !== 'HOST') return; // Only host can click
 
@@ -28,7 +33,7 @@ export default function GameTable({ state, updateState, role }) {
           </button>
         ) : <div />}
 
-        {/* Mini Scoreboard */}
+        {/* Mini Scoreboard - Non-interactive here */}
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
           {state.players.map(p => (
             <div key={p.id} className="btn-glass" style={{
@@ -102,6 +107,26 @@ export default function GameTable({ state, updateState, role }) {
           ))}
         </div>
       </div>
+
+      {/* Round Footer Controls - Quick Transition */}
+      {role === 'HOST' && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '30px', paddingBottom: '30px' }}>
+          {(isR1Done || isR2Done) && (
+            <button 
+              className="btn-glass" 
+              style={{ 
+                padding: '20px 60px', borderRadius: 'var(--radius-lg)', fontSize: '24px', 
+                background: 'linear-gradient(135deg, var(--color-teal), var(--color-pink)) !important', 
+                color: 'white !important', fontWeight: '900', boxShadow: 'var(--shadow-glow-pink)',
+                border: 'none !important'
+              }} 
+              onClick={() => updateState({ screen: 'TABLE', currentRound: isR1Done ? 'R2' : 'SUPER', currentQuestion: null })}
+            >
+              СЛЕДУЮЩИЙ РАУНД ⏩
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

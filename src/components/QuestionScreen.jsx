@@ -189,29 +189,35 @@ export default function QuestionScreen({ state, updateState, role }) {
             padding: '20px', borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0', 
             display: 'flex', flexWrap: 'nowrap', gap: '15px', alignItems: 'center', 
             overflowX: 'auto', width: '100%', border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)',
-            minHeight: '100px', boxSizing: 'border-box'
+            minHeight: '120px', boxSizing: 'border-box'
           }}
         >
           <div style={{ display: 'flex', gap: '10px', flexShrink: 0 }}>
             {!showAnswer && (
               <button className="btn-glass" style={{ padding: '12px 24px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', background: 'var(--color-teal) !important', color: 'var(--color-bg-deep) !important', fontWeight: 'bold' }} onClick={() => setShowAnswer(true)}>Показать ответ</button>
             )}
+            
             <button className="btn-glass" style={{ padding: '12px 24px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', background: 'var(--color-pink) !important', color: 'white !important', fontWeight: 'bold' }} onClick={closeQuestion}>ВЫЙТИ В РАУНД</button>
+
+            {(isR1Done || isR2Done) && (
+               <button className="btn-glass" style={{ padding: '12px 24px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', background: 'linear-gradient(135deg, var(--color-teal), var(--color-pink)) !important', color: 'white !important', fontWeight: '900' }} onClick={() => updateState({ screen: 'TABLE', currentRound: isR1Done ? 'R2' : 'SUPER', currentQuestion: null })}>СЛЕДУЮЩИЙ РАУНД ⏩</button>
+            )}
+
             {!showAnswer && (
               <button className="btn-glass" style={{ padding: '12px 24px', borderRadius: 'var(--radius-md)', whiteSpace: 'nowrap', fontSize: '15px', border: '1px solid #ffaa00 !important', color: '#ffaa00 !important' }} onClick={handleSkipQuestion}>ПРОПУСТИТЬ ВОПРОС</button>
             )}
           </div>
           
-          <div style={{ width: '1px', height: '30px', background: 'rgba(255,255,255,0.1)', flexShrink: 0 }} />
+          <div style={{ width: '1px', height: '40px', background: 'rgba(255,255,255,0.1)', flexShrink: 0 }} />
           
-          <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', padding: '5px' }}>
+          <div style={{ display: 'flex', gap: '15px', overflowX: 'auto', padding: '5px' }}>
             {state.players.map(p => (
-              <div key={p.id} style={{ display: 'flex', gap: '2px', alignItems: 'center' }}>
-                <button onClick={() => addScore(p.id, false)} style={{ padding: '12px 14px', background: 'rgba(232, 93, 141, 0.1)', border: '1px solid var(--color-pink)', color: 'var(--color-pink)', borderRadius: 'var(--radius-md) 0 0 var(--radius-md)', fontSize: '14px' }}>
+              <div key={p.id} style={{ display: 'flex', gap: '5px', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <button onClick={() => addScore(p.id, false)} className="btn-glass" style={{ padding: '8px 12px', background: 'rgba(232, 93, 141, 0.1) !important', color: 'var(--color-pink) !important', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-pink) !important', fontSize: '16px' }}>
                   -
                 </button>
-                <div style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.05)', fontSize: '14px', minWidth: '70px', textAlign: 'center', fontWeight: 'bold' }}>{p.name}</div>
-                <button onClick={() => addScore(p.id, true)} style={{ padding: '12px 14px', background: 'rgba(127, 215, 205, 0.1)', border: '1px solid var(--color-teal)', color: 'var(--color-teal)', borderRadius: '0 var(--radius-md) var(--radius-md) 0', fontSize: '14px' }}>
+                <div style={{ padding: '0 10px', fontSize: '14px', minWidth: '60px', textAlign: 'center', fontWeight: 'bold' }}>{p.name}</div>
+                <button onClick={() => addScore(p.id, true)} className="btn-glass" style={{ padding: '8px 12px', background: 'rgba(127, 215, 205, 0.1) !important', color: 'var(--color-teal) !important', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-teal) !important', fontSize: '16px' }}>
                   +
                 </button>
               </div>
