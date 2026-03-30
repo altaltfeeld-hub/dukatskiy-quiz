@@ -19,24 +19,34 @@ export default function WinnerScreen({ state, updateState }) {
   }, []);
 
   return (
-    <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', height: '100vh', overflow: 'hidden', padding: '20px' }}>
+    <div style={{ height: '100vh', display: 'flex', overflow: 'hidden', background: 'var(--color-bg-deep)', position: 'relative' }}>
       
-      {/* Background Icons Layer (Consistency) */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, opacity: 0.05, display: 'flex', flexWrap: 'wrap', gap: '100px', justifyContent: 'center', padding: '60px' }}>
-        {Array.from({ length: 8 }).map((_, i) => (
-          <motion.div key={i} animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }} transition={{ duration: 7 + i, repeat: Infinity }} style={{ width: '100px', height: '100px', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundImage: i % 2 === 0 ? 'url(/emblem.jpg)' : 'url(/rat.jpg)', filter: 'grayscale(100%) brightness(1.5)' }} />
+      {/* Restored Background Icons Layer (Drifting) */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, opacity: 0.05 }}>
+        {Array.from({ length: 15 }).map((_, i) => (
+          <motion.div 
+            key={i} 
+            initial={{ x: Math.random() * 100 + '%', y: Math.random() * 100 + '%' }}
+            animate={{ 
+              x: [Math.random() * 100 + '%', Math.random() * 100 + '%'], 
+              y: [Math.random() * 100 + '%', Math.random() * 100 + '%'],
+              opacity: [0.1, 0.4, 0.1]
+            }} 
+            transition={{ duration: 25 + i * 2, repeat: Infinity, ease: "linear" }}
+            style={{ position: 'absolute', width: '100px', height: '100px', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundImage: i % 2 === 0 ? 'url(/emblem.jpg)' : 'url(/rat.jpg)', filter: 'grayscale(100%) brightness(1.2)' }} 
+          />
         ))}
       </div>
-      
+
       {/* VFX Overlay */}
       <motion.div 
-        animate={{ opacity: [0, 0.15, 0, 0.1, 0] }}
-        transition={{ duration: 4, repeat: Infinity }}
+        animate={{ opacity: [0, 0.12, 0, 0.08, 0] }}
+        transition={{ duration: 5, repeat: Infinity }}
         style={{ position: 'fixed', inset: 0, background: 'white', pointerEvents: 'none', zIndex: 0 }}
       />
 
       {/* Confetti */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}>
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 3 }}>
          {confettiList.map((c, i) => (
            <div key={`c-${i}`} style={{
              position: 'absolute', width: `${c.size}px`, height: `${c.size * 1.5}px`,
@@ -54,20 +64,20 @@ export default function WinnerScreen({ state, updateState }) {
         }
       `}</style>
 
-      <div className="stacked-content" style={{ alignItems: 'center', position: 'relative', zIndex: 1, width: '100%', maxWidth: '1100px' }}>
-        
+      {/* Main Content Area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', zIndex: 1 }}>
         <motion.div 
           initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1 }}
-          style={{ marginBottom: '20px' }}
+          style={{ marginBottom: '40px', textAlign: 'center' }}
         >
-          <div style={{ fontSize: '18px', color: 'var(--color-teal)', fontWeight: '900', letterSpacing: '8px', marginBottom: '5px' }}>ИГРА ЗАВЕРШЕНА</div>
-          <h1 style={{ fontSize: 'clamp(32px, 8vw, 64px)', color: 'white', fontWeight: '900', lineHeight: 1, margin: 0, textShadow: '0 0 60px rgba(232, 93, 141, 0.4)' }}>
+          <div style={{ fontSize: '20px', color: 'var(--color-teal)', fontWeight: '900', letterSpacing: '12px', marginBottom: '10px' }}>ИГРА ЗАВЕРШЕНА</div>
+          <h1 style={{ fontSize: 'clamp(48px, 8vw, 84px)', color: 'white', fontWeight: '900', lineHeight: 1, margin: 0, textShadow: '0 0 60px rgba(127, 215, 205, 0.4)' }}>
             ПОБЕДИТЕЛЬ!
           </h1>
         </motion.div>
 
         {/* Winner Podium Cards */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '25px', justifyContent: 'center', marginBottom: '60px', width: '100%' }}>
+        <div style={{ display: 'flex', gap: '25px', justifyContent: 'center', alignItems: 'flex-end', marginBottom: '60px' }}>
           {winners.map((p, i) => (
             <motion.div
               key={p.id}
@@ -79,42 +89,26 @@ export default function WinnerScreen({ state, updateState }) {
                 padding: i === 0 ? '50px 40px' : '30px 40px',
                 borderRadius: 'var(--radius-lg) !important',
                 textAlign: 'center',
-                minWidth: i === 0 ? '320px' : '240px',
-                background: i === 0 ? 'rgba(127, 215, 205, 0.15) !important' : 'rgba(255,255,255,0.03) !important',
+                minWidth: i === 0 ? '300px' : '220px',
+                background: i === 0 ? 'rgba(127, 215, 205, 0.1) !important' : 'rgba(255,255,255,0.03) !important',
                 border: i === 0 ? '3px solid var(--color-teal) !important' : '1px solid rgba(255,255,255,0.1) !important',
                 boxShadow: i === 0 ? '0 20px 80px rgba(127, 215, 205, 0.3)' : 'none',
-                order: i === 0 ? 2 : (i === 1 ? 1 : 3) // Center the winner
+                order: i === 0 ? 2 : (i === 1 ? 1 : 3)
               }}
             >
-              <div style={{ fontSize: '14px', color: i === 0 ? 'var(--color-teal)' : 'var(--color-text-muted)', textTransform: 'uppercase', marginBottom: '10px', fontWeight: '900', letterSpacing: '2px' }}>
+              <div style={{ fontSize: '12px', color: i === 0 ? 'var(--color-teal)' : 'var(--color-text-muted)', textTransform: 'uppercase', marginBottom: '10px', fontWeight: '900', letterSpacing: '2px' }}>
                 {i === 0 ? '🏆 1 МЕСТО' : `${i + 1} МЕСТО`}
               </div>
-              <div style={{ fontSize: i === 0 ? '48px' : '32px', fontWeight: '900', color: 'white', marginBottom: '8px' }}>{p.name}</div>
-              <div style={{ fontSize: i === 0 ? '36px' : '24px', fontWeight: '900', color: i === 0 ? 'var(--color-teal)' : 'var(--color-pink)' }}>{p.score}</div>
+              <div style={{ fontSize: i === 0 ? '42px' : '28px', fontWeight: '900', color: 'white', marginBottom: '5px' }}>{p.name}</div>
+              <div style={{ fontSize: i === 0 ? '32px' : '22px', fontWeight: '900', color: i === 0 ? 'var(--color-teal)' : 'var(--color-pink)' }}>{p.score}</div>
             </motion.div>
           ))}
-        </div>
-
-        {/* Final Standings Small Table */}
-        <div className="btn-glass" style={{ width: '100%', maxWidth: '700px', padding: '20px 40px', borderRadius: 'var(--radius-lg) !important', background: 'rgba(255,255,255,0.01) !important', textAlign: 'left', marginBottom: '30px' }}>
-           <h3 style={{ fontSize: '12px', color: 'var(--color-text-muted)', textTransform: 'uppercase', marginBottom: '15px', letterSpacing: '4px', fontWeight: '900' }}>ИТОГОВАЯ ТАБЛИЦА</h3>
-           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-             {sortedPlayers.map((p, idx) => (
-               <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '12px', borderBottom: idx !== sortedPlayers.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
-                 <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                   <span style={{ fontSize: '18px', color: 'var(--color-text-muted)', fontWeight: 'bold', width: '25px' }}>{idx + 1}</span>
-                   <span style={{ fontSize: '24px', fontWeight: '800', color: idx < 3 ? 'white' : 'rgba(255,255,255,0.6)' }}>{p.name}</span>
-                 </div>
-                 <span style={{ fontSize: '24px', fontWeight: '900', color: idx === 0 ? 'var(--color-teal)' : 'var(--color-pink)' }}>{p.score}</span>
-               </div>
-             ))}
-           </div>
         </div>
 
         <button
           className="btn-glass"
           style={{ 
-            padding: '16px 48px', fontSize: '18px', 
+            padding: '20px 60px', fontSize: '22px', 
             background: 'var(--color-pink) !important', color: 'white !important', 
             borderRadius: 'var(--radius-lg) !important', fontWeight: '900',
             boxShadow: '0 0 50px rgba(232, 93, 141, 0.3)',
@@ -136,6 +130,23 @@ export default function WinnerScreen({ state, updateState }) {
           НОВАЯ ИГРА 🔄
         </button>
       </div>
+
+      {/* FIXED RIGHT SIDEBAR - Final Standings */}
+      <div style={{ width: '320px', height: '100vh', background: 'rgba(0,0,0,0.2)', backdropFilter: 'blur(40px)', borderLeft: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', padding: '40px 25px', zIndex: 2 }}>
+        <h3 style={{ fontSize: '10px', color: 'var(--color-text-muted)', letterSpacing: '4px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '30px' }}>ИТОГОВАЯ ТАБЛИЦА</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', overflowY: 'auto', paddingRight: '5px' }}>
+          {sortedPlayers.map((p, idx) => (
+            <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <span style={{ fontSize: '16px', color: 'var(--color-text-muted)', fontWeight: 'bold' }}>{idx + 1}</span>
+                <span style={{ fontSize: '20px', fontWeight: '800', color: idx < 3 ? 'white' : 'rgba(255,255,255,0.6)' }}>{p.name}</span>
+              </div>
+              <span style={{ fontSize: '20px', fontWeight: '900', color: idx === 0 ? 'var(--color-teal)' : 'var(--color-pink)' }}>{p.score}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 }

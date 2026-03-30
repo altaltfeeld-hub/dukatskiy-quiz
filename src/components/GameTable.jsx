@@ -25,100 +25,127 @@ export default function GameTable({ state, updateState, role }) {
   };
 
   return (
-    <div className="container" style={{ height: '100vh', display: 'flex', flexDirection: 'column', padding: '20px', overflow: 'hidden' }}>
+    <div style={{ height: '100vh', display: 'flex', overflow: 'hidden', background: 'var(--color-bg-deep)', position: 'relative' }}>
       
-      {/* Background Icons Layer (Reverted) */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, overflow: 'hidden', display: 'flex', flexWrap: 'wrap', gap: '80px', padding: '40px', justifyContent: 'center', opacity: 0.05 }}>
-        {Array.from({ length: 12 }).map((_, i) => (
-          <motion.div key={i} animate={{ opacity: [0.2, 0.5, 0.2] }} transition={{ duration: 7 + i, repeat: Infinity }} style={{ width: '80px', height: '80px', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundImage: i % 2 === 0 ? 'url(/emblem.jpg)' : 'url(/rat.jpg)', filter: 'grayscale(100%)' }} />
+      {/* Restored Background Icons Layer (Drifting) */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, opacity: 0.07 }}>
+        {Array.from({ length: 15 }).map((_, i) => (
+          <motion.div 
+            key={i} 
+            initial={{ x: Math.random() * 100 + '%', y: Math.random() * 100 + '%' }}
+            animate={{ 
+              x: [Math.random() * 100 + '%', Math.random() * 100 + '%'], 
+              y: [Math.random() * 100 + '%', Math.random() * 100 + '%'],
+              opacity: [0.2, 0.5, 0.2]
+            }} 
+            transition={{ duration: 20 + i * 2, repeat: Infinity, ease: "linear" }}
+            style={{ position: 'absolute', width: '100px', height: '100px', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundImage: i % 2 === 0 ? 'url(/emblem.jpg)' : 'url(/rat.jpg)', filter: 'grayscale(100%) brightness(1.2)' }} 
+          />
         ))}
       </div>
 
-      <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', zIndex: 1, height: '100%', display: 'flex', flexDirection: 'column' }}>
-          
-          {/* Header Row - Compact */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-             <div style={{ textAlign: 'left' }}>
-               <h2 style={{ fontSize: '18px', color: 'var(--color-teal)', fontWeight: '900', letterSpacing: '2px' }}>
-                 {state.currentRound === 'R1' ? 'РАУНД 1' : 'РАУНД 2'}
-               </h2>
-               <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', fontWeight: '900' }}>
-                 ОТКРЫТО: {state.currentRound === 'R1' ? openedR1Count : openedR2Count} / {state.currentRound === 'R1' ? 15 : 25}
-               </div>
-             </div>
+      {/* Main Content Area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '20px', zIndex: 1, overflow: 'hidden' }}>
+        
+        {/* Minimal Round Header */}
+        <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'baseline', gap: '15px' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: '900', color: 'var(--color-teal)', letterSpacing: '4px', margin: 0 }}>
+            {state.currentRound === 'R1' ? 'РАУНД 1' : 'РАУНД 2'}
+          </h1>
+          <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', fontWeight: '800' }}>
+            ПРОГРЕСС: {state.currentRound === 'R1' ? openedR1Count : openedR2Count} / {state.currentRound === 'R1' ? 15 : 25}
+          </span>
+        </div>
 
-             <div style={{ display: 'flex', gap: '10px' }}>
-               {players.map(p => (
-                 <div key={p.id} className="btn-glass" style={{ padding: '6px 12px', fontSize: '12px', textAlign: 'center', minWidth: '60px' }}>
-                    <div style={{ opacity: 0.5, fontSize: '9px' }}>{p.name}</div>
-                    <div style={{ fontWeight: '900', color: 'var(--color-pink)' }}>{p.score}</div>
-                 </div>
-               ))}
-             </div>
+        {/* Grid Container */}
+        <div className="btn-glass" style={{ flex: 1, padding: '15px', borderRadius: 'var(--radius-lg) !important', background: 'rgba(255,255,255,0.02) !important', display: 'flex', overflow: 'hidden' }}>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: `minmax(200px, 1.2fr) repeat(${roundData[0].questions.length}, 1fr)`, 
+            gap: '10px',
+            width: '100%',
+            height: '100%'
+          }}>
+            {roundData.map((topicData, tIdx) => (
+              <React.Fragment key={topicData.topic}>
+                {/* Topic Card */}
+                <div style={{ 
+                  background: 'rgba(255,255,255,0.04)', padding: '15px', display: 'flex', alignItems: 'center', 
+                  fontWeight: '900', borderLeft: '5px solid var(--color-teal)',
+                  textTransform: 'uppercase', fontSize: '13px', lineHeight: '1.2',
+                  borderRadius: 'var(--radius-sm)', color: 'white'
+                }}>
+                  {topicData.topic}
+                </div>
 
-             <div style={{ display: 'flex', gap: '10px' }}>
-                {role === 'HOST' && <button className="btn-glass" style={{ padding: '8px 15px', fontSize: '10px', fontWeight: 'bold' }} onClick={() => updateState({ screen: 'START' })}>🏠 ГЛАВНАЯ</button>}
-                {role === 'HOST' && <button className="btn-glass" style={{ padding: '8px 15px', fontSize: '10px', fontWeight: 'bold' }} onClick={() => updateState({ screen: 'ROUND_SELECT' })}>РАУНДЫ</button>}
-             </div>
+                {/* Score Cells */}
+                {topicData.questions.map((q, qIdx) => {
+                  const qId = `${state.currentRound}_${tIdx}_${qIdx}`;
+                  const isOpened = state.openedQuestions.includes(qId);
+
+                  return (
+                    <button 
+                      key={qId}
+                      disabled={isOpened || role !== 'HOST'}
+                      onClick={() => handleQuestionClick(tIdx, qIdx, q)}
+                      className={isOpened ? "" : "btn-glass"}
+                      style={{ 
+                        background: isOpened ? 'rgba(0,0,0,0.3)' : 'rgba(232, 93, 141, 0.05) !important',
+                        border: isOpened ? '1px dashed rgba(255,255,255,0.1)' : '1px solid rgba(255,255,255,0.08) !important',
+                        fontSize: 'clamp(20px, 3vw, 36px)', 
+                        color: isOpened ? 'rgba(255,255,255,0.1)' : 'white',
+                        fontWeight: '900',
+                        borderRadius: 'var(--radius-sm) !important',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      {isOpened ? "✓" : q.cost}
+                    </button>
+                  )
+                })}
+              </React.Fragment>
+            ))}
           </div>
+        </div>
 
-          {/* Grid Container - No Scroll Fix */}
-          <div className="btn-glass" style={{ flex: 1, padding: '10px', borderRadius: 'var(--radius-lg) !important', background: 'rgba(255,255,255,0.02) !important', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-             <div style={{ 
-               display: 'grid', 
-               gridTemplateColumns: `minmax(180px, 1.2fr) repeat(${roundData[0].questions.length}, 1fr)`, 
-               gap: '8px',
-               height: '100%',
-               width: '100%'
-             }}>
-                {roundData.map((topicData, tIdx) => (
-                  <React.Fragment key={topicData.topic}>
-                    {/* Topic Name */}
-                    <div style={{ 
-                      background: 'rgba(255,255,255,0.04)', padding: '12px', display: 'flex', alignItems: 'center', 
-                      fontWeight: '900', borderLeft: '4px solid var(--color-teal)',
-                      textTransform: 'uppercase', fontSize: '10px', lineHeight: '1.2',
-                      borderRadius: 'var(--radius-sm)'
-                    }}>
-                      {topicData.topic}
-                    </div>
-
-                    {/* Questions Cells */}
-                    {topicData.questions.map((q, qIdx) => {
-                      const qId = `${state.currentRound}_${tIdx}_${qIdx}`;
-                      const isOpened = state.openedQuestions.includes(qId);
-
-                      return (
-                        <button 
-                          key={qId}
-                          disabled={isOpened || role !== 'HOST'}
-                          onClick={() => handleQuestionClick(tIdx, qIdx, q)}
-                          className={isOpened ? "" : "btn-glass"}
-                          style={{ 
-                            background: isOpened ? 'rgba(0,0,0,0.2)' : 'rgba(232, 93, 141, 0.05) !important',
-                            border: isOpened ? '1px dashed rgba(255,255,255,0.1)' : '1px solid rgba(255,255,255,0.05) !important',
-                            fontSize: 'clamp(18px, 2.5vw, 32px)', 
-                            color: isOpened ? 'rgba(255,255,255,0.1)' : 'white',
-                            fontWeight: '900',
-                            borderRadius: 'var(--radius-sm) !important'
-                          }}
-                        >
-                          {isOpened ? "✓" : q.cost}
-                        </button>
-                      )
-                    })}
-                  </React.Fragment>
-                ))}
-             </div>
-          </div>
-
-          {/* Bottom Round transition buttons (If any) */}
-          {role === 'HOST' && (isR1Done || isR2Done) && (
-            <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'center' }}>
-               <button className="btn-glass" style={{ padding: '12px 40px', background: 'linear-gradient(135deg, var(--color-teal), var(--color-pink)) !important', color: 'white !important', fontWeight: '900', fontSize: '16px' }} onClick={() => updateState({ screen: 'TABLE', currentRound: isR1Done ? 'R2' : 'SUPER', currentQuestion: null })}>СЛЕДУЮЩИЙ РАУНД Р2 ⏩</button>
-            </div>
-          )}
+        {/* Next Round Button - Floating if done */}
+        {role === 'HOST' && (isR1Done || isR2Done) && (
+          <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} style={{ position: 'absolute', bottom: '40px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}>
+            <button className="btn-glass" style={{ padding: '15px 45px', background: 'linear-gradient(135deg, var(--color-teal), var(--color-pink)) !important', color: 'white !important', fontWeight: '900', fontSize: '18px', boxShadow: '0 0 40px rgba(0,0,0,0.5)' }} onClick={() => updateState({ screen: 'TABLE', currentRound: isR1Done ? 'R2' : 'SUPER', currentQuestion: null })}>
+              {isR1Done ? 'ПЕРЕЙТИ К РАУНДУ 2 ⏩' : 'ПЕРЕЙТИ К СУПЕР-ИГРЕ 🏆'}
+            </button>
+          </motion.div>
+        )}
       </div>
+
+      {/* FIXED RIGHT SIDEBAR - Restored Aesthetic */}
+      <div style={{ width: '260px', height: '100vh', background: 'rgba(0,0,0,0.2)', backdropFilter: 'blur(30px)', borderLeft: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', padding: '30px 20px', zIndex: 2 }}>
+        
+        <div style={{ marginBottom: '40px' }}>
+           <h3 style={{ fontSize: '10px', color: 'var(--color-text-muted)', letterSpacing: '4px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '20px' }}>Участники</h3>
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              {players.map(p => (
+                <div key={p.id} className="btn-glass" style={{ padding: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: 'var(--radius-md) !important', background: 'rgba(255,255,255,0.03) !important' }}>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: '12px', fontWeight: '800', color: 'white' }}>{p.name}</div>
+                    <div style={{ fontSize: '20px', fontWeight: '900', color: 'var(--color-pink)' }}>{p.score}</div>
+                  </div>
+                  {p.connected ? <span style={{ fontSize: '12px' }}>🟢</span> : <span style={{ fontSize: '12px', opacity: 0.3 }}>⏳</span>}
+                </div>
+              ))}
+           </div>
+        </div>
+
+        <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {role === 'HOST' && (
+            <>
+              <button className="btn-glass" style={{ padding: '12px', fontSize: '11px', fontWeight: '900', background: 'rgba(255,255,255,0.05) !important' }} onClick={() => updateState({ screen: 'START' })}>ГЛАВНОЕ МЕНЮ</button>
+              <button className="btn-glass" style={{ padding: '12px', fontSize: '11px', fontWeight: '900', background: 'rgba(255,255,255,0.05) !important' }} onClick={() => updateState({ screen: 'ROUND_SELECT' })}>ВЫБОР РАУНДА</button>
+            </>
+          )}
+        </div>
+      </div>
+
     </div>
   );
 }
