@@ -139,30 +139,27 @@ export default function GameTable({ state, updateState, role }) {
       </div>
 
       {/* FIXED RIGHT SIDEBAR - Restored Aesthetic */}
-      <div style={{ width: '260px', height: '100vh', background: 'rgba(0,0,0,0.2)', backdropFilter: 'blur(30px)', borderLeft: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', padding: '30px 20px', zIndex: 2 }}>
+      <div style={{ width: '260px', height: '100vh', background: 'rgba(0,0,0,0.2)', backdropFilter: 'blur(30px)', borderLeft: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', padding: '20px 15px', zIndex: 2, overflow: 'hidden' }}>
         
-        <div style={{ marginBottom: '40px' }}>
-           <h3 style={{ fontSize: '10px', color: 'var(--color-text-muted)', letterSpacing: '4px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '20px' }}>Участники</h3>
-           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              {players.map(p => (
-                <div key={p.id} className="btn-glass" style={{ padding: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: 'var(--radius-md) !important', background: 'rgba(255,255,255,0.03) !important' }}>
-                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: '12px', fontWeight: '800', color: 'white' }}>{p.name}</div>
-                    <div style={{ fontSize: '20px', fontWeight: '900', color: 'var(--color-pink)' }}>{p.score}</div>
-                  </div>
-                  {p.connected ? <span style={{ fontSize: '12px' }}>🟢</span> : <span style={{ fontSize: '12px', opacity: 0.3 }}>⏳</span>}
-                </div>
-              ))}
-           </div>
-        </div>
+        {/* Nav Buttons at TOP - always visible */}
+        {role === 'HOST' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px', flexShrink: 0 }}>
+            <button className="btn-glass" style={{ padding: '10px', fontSize: '10px', fontWeight: '900', background: 'rgba(255,255,255,0.05) !important' }} onClick={() => updateState({ screen: 'START' })}>ГЛАВНОЕ МЕНЮ</button>
+            <button className="btn-glass" style={{ padding: '10px', fontSize: '10px', fontWeight: '900', background: 'rgba(255,255,255,0.05) !important' }} onClick={() => updateState({ screen: 'ROUND_SELECT' })}>ВЫБОР РАУНДА</button>
+          </div>
+        )}
 
-        <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {role === 'HOST' && (
-            <>
-              <button className="btn-glass" style={{ padding: '12px', fontSize: '11px', fontWeight: '900', background: 'rgba(255,255,255,0.05) !important' }} onClick={() => updateState({ screen: 'START' })}>ГЛАВНОЕ МЕНЮ</button>
-              <button className="btn-glass" style={{ padding: '12px', fontSize: '11px', fontWeight: '900', background: 'rgba(255,255,255,0.05) !important' }} onClick={() => updateState({ screen: 'ROUND_SELECT' })}>ВЫБОР РАУНДА</button>
-            </>
-          )}
+        <h3 style={{ fontSize: '9px', color: 'var(--color-text-muted)', letterSpacing: '3px', fontWeight: '900', textTransform: 'uppercase', marginBottom: '12px', flexShrink: 0 }}>СЧЁТ</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
+           {players.map(p => (
+             <div key={p.id} className="btn-glass" style={{ padding: '10px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: 'var(--radius-md) !important', background: 'rgba(255,255,255,0.03) !important', flexShrink: 0 }}>
+               <div style={{ textAlign: 'left' }}>
+                 <div style={{ fontSize: '11px', fontWeight: '800', color: 'white' }}>{p.name}</div>
+                 <div style={{ fontSize: '18px', fontWeight: '900', color: 'var(--color-pink)' }}>{p.score}</div>
+               </div>
+               {p.connected ? <span style={{ fontSize: '10px' }}>🟢</span> : <span style={{ fontSize: '10px', opacity: 0.3 }}>⏳</span>}
+             </div>
+           ))}
         </div>
       </div>
 
