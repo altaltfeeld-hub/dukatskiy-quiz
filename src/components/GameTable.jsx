@@ -109,11 +109,31 @@ export default function GameTable({ state, updateState, role }) {
         </div>
 
         {/* Next Round Button - Floating if done */}
-        {role === 'HOST' && (isR1Done || isR2Done) && (
+        {role === 'HOST' && isR1Done && !isR2Done && (
           <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} style={{ position: 'absolute', bottom: '40px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}>
-            <button className="btn-glass" style={{ padding: '15px 45px', background: 'linear-gradient(135deg, var(--color-teal), var(--color-pink)) !important', color: 'white !important', fontWeight: '900', fontSize: '18px', boxShadow: '0 0 40px rgba(0,0,0,0.5)' }} onClick={() => updateState({ screen: 'TABLE', currentRound: isR1Done ? 'R2' : 'SUPER', currentQuestion: null })}>
-              {isR1Done ? 'ПЕРЕЙТИ К РАУНДУ 2 ⏩' : 'ПЕРЕЙТИ К СУПЕР-ИГРЕ 🏆'}
+            <button className="btn-glass" style={{ padding: '15px 45px', background: 'linear-gradient(135deg, var(--color-teal), #5bc8ff) !important', color: 'white !important', fontWeight: '900', fontSize: '18px', boxShadow: '0 0 40px rgba(91,200,255,0.3)', letterSpacing: '1px' }} onClick={() => updateState({ screen: 'TABLE', currentRound: 'R2', currentQuestion: null })}>
+              ПЕРЕЙТИ К РАУНДУ 2 ⏩
             </button>
+          </motion.div>
+        )}
+
+        {/* Super Game Button - Only when R2 complete */}
+        {role === 'HOST' && isR2Done && (
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: 'spring', stiffness: 200 }}
+            style={{ position: 'absolute', bottom: '40px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}
+          >
+            <motion.button
+              animate={{ boxShadow: ['0 0 20px rgba(232,93,141,0.3)', '0 0 60px rgba(232,93,141,0.7)', '0 0 20px rgba(232,93,141,0.3)'] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="btn-glass"
+              style={{ padding: '20px 60px', background: 'linear-gradient(135deg, var(--color-pink), #9b59b6) !important', color: 'white !important', fontWeight: '900', fontSize: '22px', letterSpacing: '2px', border: '2px solid rgba(232,93,141,0.5) !important' }}
+              onClick={() => updateState({ screen: 'SUPER_GAME', currentRound: 'SUPER', currentQuestion: null })}
+            >
+              🏆 СУПЕР-ИГРА
+            </motion.button>
           </motion.div>
         )}
       </div>
