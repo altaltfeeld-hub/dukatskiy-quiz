@@ -108,9 +108,9 @@ export default function QuestionScreen({ state, updateState, role }) {
         <div className="stacked-content" style={{ alignItems: 'center', maxWidth: '1000px' }}>
           {/* Topic-specific Logic */}
           {(() => {
-            const topic = state.currentRound?.topic || "";
-            const isSpecialCropTopic = topic === "Угадай мем" || topic === "Куда течет река";
-            const isNoBlurTopic = topic === "Что по встрече?" || isSpecialCropTopic;
+            const topic = (q.topic || "").toLowerCase().trim();
+            const isSpecialCropTopic = topic.includes("угадай мем") || topic.includes("куда течет река");
+            const isNoBlurTopic = topic.includes("что по встрече") || isSpecialCropTopic;
             const imageFile = q.image || q.answerImage;
 
             if (showAnswer) {

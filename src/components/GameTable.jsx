@@ -12,7 +12,7 @@ export default function GameTable({ state, updateState, role }) {
 
     updateState({
       screen: 'QUESTION',
-      currentQuestion: { ...questionData, id: qId },
+      currentQuestion: { ...questionData, id: qId, topic: roundData[topicIdx].topic },
       openedQuestions: [...state.openedQuestions, qId]
     });
   };

@@ -51,9 +51,9 @@ export default function SuperGame({ state, updateState, role }) {
           
           {/* Topic-specific Logic */}
           {(() => {
-            const topic = finalQ.topic || "";
-            const isSpecialCropTopic = topic === "Угадай мем" || topic === "Куда течет река";
-            const isNoBlurTopic = topic === "Что по встрече?" || isSpecialCropTopic;
+            const topic = (finalQ.topic || "").toLowerCase().trim();
+            const isSpecialCropTopic = topic.includes("угадай мем") || topic.includes("куда течет река");
+            const isNoBlurTopic = topic.includes("что по встрече") || isSpecialCropTopic;
             const imageFile = finalQ.image || finalQ.answerImage;
 
             if (showAnswer) {
