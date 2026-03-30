@@ -109,18 +109,28 @@ export default function StartScreen({ updateState }) {
         )}
       </AnimatePresence>
   
-      {/* Chess-Pattern Background Grid */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, opacity: 0.07, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, 120px)', gridTemplateRows: 'repeat(auto-fill, 120px)', overflow: 'hidden' }}>
-        {Array.from({ length: 80 }).map((_, i) => {
-          const row = Math.floor(i / Math.ceil(window.innerWidth / 120));
-          const col = i % Math.ceil(window.innerWidth / 120);
+      {/* Chess-Pattern Background Grid - flexWrap approach */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, opacity: 0.08, display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start', overflow: 'hidden' }}>
+        {Array.from({ length: 120 }).map((_, i) => {
+          const cols = 12;
+          const row = Math.floor(i / cols);
+          const col = i % cols;
           const isEven = (row + col) % 2 === 0;
           return (
             <motion.div
               key={i}
-              animate={{ opacity: [0.4, 0.7, 0.4] }}
-              transition={{ duration: 4 + (i % 5), repeat: Infinity, delay: (i % 7) * 0.3 }}
-              style={{ width: '120px', height: '120px', backgroundSize: '70%', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', backgroundImage: isEven ? 'url(/emblem.jpg)' : 'url(/rat.jpg)', filter: 'grayscale(100%) brightness(1.5)' }}
+              animate={{ opacity: [0.3, 0.65, 0.3] }}
+              transition={{ duration: 3 + (i % 6), repeat: Infinity, delay: (i % 8) * 0.2 }}
+              style={{
+                width: '8.33vw',
+                height: '8.33vw',
+                flexShrink: 0,
+                backgroundSize: '55%',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundImage: isEven ? 'url(/emblem.jpg)' : 'url(/rat.jpg)',
+                filter: 'grayscale(100%) brightness(1.5)'
+              }}
             />
           );
         })}
