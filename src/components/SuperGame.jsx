@@ -49,23 +49,51 @@ export default function SuperGame({ state, updateState, role }) {
             <h2 style={{ color: 'var(--color-teal)', marginBottom: '30px', fontSize: '32px' }}>{finalQ.topic}</h2>
           </div>
           
-          <div className="btn-glass" style={{ padding: '40px', borderRadius: 'var(--radius-lg)', width: '100%', background: 'rgba(255,255,255,0.02) !important', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-            {showAnswer && finalQ.answerImage ? (
-              <img src={`/${finalQ.answerImage}`} alt="Answer" style={{ width: '100%', maxHeight: '40vh', objectFit: 'contain', borderRadius: 'var(--radius-md)' }} />
-            ) : (
-              finalQ.image && (
-                <div style={{ position: 'relative', width: '100%', maxHeight: '40vh', overflow: 'hidden', borderRadius: 'var(--radius-md)' }}>
-                  <img src={`/${finalQ.image}`} alt="Question" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: showAnswer ? 'none' : 'blur(15px) brightness(0.8)', transition: 'filter 0.5s ease' }} />
-                  {!showAnswer && (
-                    <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-                       <span className="btn-glass" style={{ padding: '10px 20px', fontSize: '14px' }}>ИЗОБРАЖЕНИЕ СКРЫТО</span>
-                    </div>
-                  )}
-                </div>
-              )
-            )}
-            <p style={{ fontSize: 'clamp(24px, 5vw, 48px)', lineHeight: '1.3', margin: 0 }}>{finalQ.text}</p>
-          </div>
+          {/* Topic-specific Logic */}
+          {(() => {
+            const topic = finalQ.topic || "";
+            const isSpecialCropTopic = topic === "Угадай мем" || topic === "Куда течет река";
+            const isNoBlurTopic = topic === "Что по встрече?" || isSpecialCropTopic;
+            const imageFile = finalQ.image || finalQ.answerImage;
+
+            if (showAnswer) {
+               const finalImage = finalQ.answerImage || (isSpecialCropTopic ? `quiz/full/${imageFile}` : imageFile);
+               return finalImage ? (
+                 <img 
+                    src={`/${finalImage}`} 
+                    alt="Answer" 
+                    style={{ width: '100%', maxHeight: '40vh', objectFit: 'contain', borderRadius: 'var(--radius-md)' }} 
+                 />
+               ) : (
+                 <p style={{ fontSize: 'clamp(24px, 5vw, 48px)', lineHeight: '1.3', margin: 0 }}>{finalQ.text}</p>
+               );
+            } else {
+               const qImage = isSpecialCropTopic ? `quiz/cropped/${imageFile}` : imageFile;
+               return (
+                 <>
+                   {qImage && (
+                     <div style={{ position: 'relative', width: '100%', maxHeight: '40vh', overflow: 'hidden', borderRadius: 'var(--radius-md)' }}>
+                       <img 
+                          src={`/${qImage}`} 
+                          alt="Question" 
+                          style={{ 
+                            width: '100%', height: '100%', objectFit: 'contain', 
+                            filter: isNoBlurTopic ? 'none' : 'blur(15px) brightness(0.8)', 
+                            transition: 'filter 0.5s ease' 
+                          }} 
+                        />
+                       {!isNoBlurTopic && (
+                         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+                            <span className="btn-glass" style={{ padding: '10px 20px', fontSize: '14px' }}>ИЗОБРАЖЕНИЕ СКРЫТО</span>
+                         </div>
+                       )}
+                     </div>
+                   )}
+                   <p style={{ fontSize: 'clamp(24px, 5vw, 48px)', lineHeight: '1.3', margin: 0 }}>{finalQ.text}</p>
+                 </>
+               );
+            }
+          })()}
           
           {showAnswer && finalQ.answer && (
              <motion.div 

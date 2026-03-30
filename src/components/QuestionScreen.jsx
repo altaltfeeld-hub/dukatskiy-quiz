@@ -96,39 +96,57 @@ export default function QuestionScreen({ state, updateState, role }) {
       {/* Scrollable Question Content */}
       <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 24px' }}>
         <div className="stacked-content" style={{ alignItems: 'center', maxWidth: '1000px' }}>
-          {showAnswer && q.answerImage ? (
-            <img 
-              src={`/${q.answerImage}`} 
-              alt="Answer" 
-              style={{ width: '100%', maxHeight: '60vh', objectFit: 'contain', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-card)' }} 
-            />
-          ) : (
-            <>
-              {q.image && (
-                <div style={{ position: 'relative', width: '100%', maxHeight: '45vh', overflow: 'hidden', borderRadius: 'var(--radius-md)', marginBottom: '20px' }}>
-                  <img 
-                    src={`/${q.image}`} 
-                    alt="Question" 
-                    style={{ 
-                      width: '100%', height: '100%', objectFit: 'contain', 
-                      filter: showAnswer ? 'none' : 'blur(8px) brightness(0.8)',
-                      transition: 'filter 0.5s ease'
-                    }} 
-                  />
-                  {!showAnswer && (
-                    <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-                      <span className="btn-glass" style={{ padding: '10px 20px', fontSize: '14px', whiteSpace: 'nowrap' }}>ИЗОБРАЖЕНИЕ СКРЫТО</span>
+          {/* Topic-specific Logic */}
+          {(() => {
+            const topic = state.currentRound?.topic || "";
+            const isSpecialCropTopic = topic === "Угадай мем" || topic === "Куда течет река";
+            const isNoBlurTopic = topic === "Что по встрече?" || isSpecialCropTopic;
+            const imageFile = q.image || q.answerImage;
+
+            if (showAnswer) {
+              // Priority: answerImage, then full version if special topic, then regular image
+              const finalImage = q.answerImage || (isSpecialCropTopic ? `quiz/full/${imageFile}` : imageFile);
+              return finalImage ? (
+                <img 
+                  src={`/${finalImage}`} 
+                  alt="Answer" 
+                  style={{ width: '100%', maxHeight: '60vh', objectFit: 'contain', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-card)' }} 
+                />
+              ) : (
+                <h1 style={{ fontSize: 'clamp(24px, 6vw, 48px)', textAlign: 'center', lineHeight: '1.2', margin: 0 }}>{q.text}</h1>
+              );
+            } else {
+              // Question Phase
+              const qImage = isSpecialCropTopic ? `quiz/cropped/${imageFile}` : imageFile;
+              return (
+                <>
+                  {qImage && (
+                    <div style={{ position: 'relative', width: '100%', maxHeight: '45vh', overflow: 'hidden', borderRadius: 'var(--radius-md)', marginBottom: '20px' }}>
+                      <img 
+                        src={`/${qImage}`} 
+                        alt="Question" 
+                        style={{ 
+                          width: '100%', height: '100%', objectFit: 'contain', 
+                          filter: isNoBlurTopic ? 'none' : 'blur(8px) brightness(0.8)',
+                          transition: 'filter 0.5s ease'
+                        }} 
+                      />
+                      {!isNoBlurTopic && (
+                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+                          <span className="btn-glass" style={{ padding: '10px 20px', fontSize: '14px', whiteSpace: 'nowrap' }}>ИЗОБРАЖЕНИЕ СКРЫТО</span>
+                        </div>
+                      )}
                     </div>
                   )}
-                </div>
-              )}
-              <h1 style={{ fontSize: 'clamp(24px, 6vw, 48px)', textAlign: 'center', lineHeight: '1.2', margin: 0 }}>{q.text}</h1>
-              {showAnswer && q.answer && (
-                <div className="btn-glass" style={{ width: 'auto', marginTop: '20px', padding: '24px 40px', borderRadius: 'var(--radius-md)', fontSize: 'clamp(20px, 4vw, 32px)', color: 'var(--color-teal)', border: '1px solid var(--color-teal) !important' }}>
-                   ОТВЕТ: <span style={{ color: 'white' }}>{q.answer}</span>
-                </div>
-              )}
-            </>
+                  <h1 style={{ fontSize: 'clamp(24px, 6vw, 48px)', textAlign: 'center', lineHeight: '1.2', margin: 0 }}>{q.text}</h1>
+                </>
+              );
+            }
+          })()}
+          {showAnswer && q.answer && (
+            <div className="btn-glass" style={{ width: 'auto', marginTop: '20px', padding: '24px 40px', borderRadius: 'var(--radius-md)', fontSize: 'clamp(20px, 4vw, 32px)', color: 'var(--color-teal)', border: '1px solid var(--color-teal) !important' }}>
+                ОТВЕТ: <span style={{ color: 'white' }}>{q.answer}</span>
+            </div>
           )}
         </div>
       </div>

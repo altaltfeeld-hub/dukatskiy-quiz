@@ -71,31 +71,36 @@ export default function StartScreen({ updateState }) {
         )}
       </AnimatePresence>
 
-      <div className="stacked-content" style={{ alignItems: 'center', gap: '4rem', position: 'relative' }}>
-        
-        {/* Flanking Ornaments */}
-        <motion.div 
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          style={{ 
-            position: 'absolute', left: '-15vw', top: '50%', transform: 'translateY(-50%)',
-            width: '180px', height: '180px', opacity: 0.15, filter: 'grayscale(100%) brightness(1.2)',
-            background: 'url(/emblem.jpg) center/cover', borderRadius: '50%',
-            boxShadow: '0 0 40px rgba(127, 215, 205, 0.2)', pointerEvents: 'none',
-            border: '2px solid rgba(127, 215, 205, 0.3)'
-          }} 
-        />
-        <motion.div 
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-          style={{ 
-            position: 'absolute', right: '-15vw', top: '50%', transform: 'translateY(-50%)',
-            width: '180px', height: '180px', opacity: 0.15, filter: 'grayscale(100%) brightness(1.1)',
-            background: 'url(/rat.jpg) center/cover', borderRadius: '50%',
-            boxShadow: '0 0 40px rgba(232, 93, 141, 0.2)', pointerEvents: 'none',
-            border: '2px solid rgba(232, 93, 141, 0.3)'
-          }} 
-        />
+      {/* Premium Checkerboard Background Layer */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, overflow: 'hidden', display: 'flex', flexWrap: 'wrap', gap: '80px', padding: '40px', justifyContent: 'center' }}>
+        {Array.from({ length: 24 }).map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0 }}
+            animate={{ 
+              opacity: 0.04,
+              y: [0, i % 2 === 0 ? 15 : -15, 0],
+              rotate: [0, i % 3 === 0 ? 5 : -5, 0]
+            }}
+            transition={{ 
+              duration: 6 + (i % 4), 
+              repeat: Infinity, 
+              ease: "easeInOut",
+              delay: i * 0.1 
+            }}
+            style={{
+              width: '120px', height: '120px',
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              backgroundImage: i % 2 === 0 ? 'url(/emblem.jpg)' : 'url(/rat.jpg)',
+              filter: 'grayscale(100%) brightness(1.2)'
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="stacked-content" style={{ alignItems: 'center', gap: '4rem', position: 'relative', zIndex: 1 }}>
 
         <div style={{ position: 'relative' }}>
           <motion.div 
